@@ -104,11 +104,39 @@ nav {
 
 .dropdown-menu {
   border: 1px solid rgb(105, 102, 102) !important;
-  background: transparent !important;
+  background: linear-gradient(to top right, #A4A2A2, #EEEEEE) !important;
+  transition: all ease 0.3s;
 }
 
 .dropdown-item {
-  color: #fffcfc;
+  color: #000000;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+  transition: all ease 0.3s;
+}
+
+
+.dropdown-menu .dropdown-item::after {
+  content: '';
+  width: 0%;
+  height: 1px;
+  background: rgb(8, 8, 8) !important;
+  display: block;
+  margin: auto;
+  transition: 0.3s;
+}
+
+.dropdown-item:hover::after {
+  width: 100%;
+  transition: 0.3s;
+}
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+  background: transparent !important;
 }
 
 a {
@@ -333,6 +361,9 @@ footer a:hover {
   transform: translate(-50%, -50%) scale(1.1);
 }
 
+/* .maskImageBg{
+  mask-image: url(/public/dot-mask.png);
+} */
 
 .image-container {
   position: relative;
@@ -454,6 +485,7 @@ textarea:focus::placeholder {
 .newsLetterForm {
   position: relative;
 }
+
 
 .newsLetterSubmit {
   color: rgb(153, 151, 151);

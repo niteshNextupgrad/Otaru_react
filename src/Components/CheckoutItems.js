@@ -38,6 +38,7 @@ export default function CheckOutCartItems() {
         register,
         handleSubmit,
         watch,
+        reset,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(checkoutSchema),
@@ -56,6 +57,8 @@ export default function CheckOutCartItems() {
             total: subtotal,
         };
         console.log("Payload:", payload);
+        alert("Order placed successfully!")
+        reset()
     };
 
     return (

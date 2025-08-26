@@ -129,7 +129,7 @@ export default function HeroPage() {
                             >
                                 <div className="position-relative px-lg-3">
                                     <h2 className="display-2 w-75 ls-1 mb-5">{slide.title}</h2>
-                                    <Link href="/portfolio/standard-list/" className="pageBtn">
+                                    <Link href="/shop" className="pageBtn">
                                         View More
                                     </Link>
                                 </div>
@@ -283,7 +283,7 @@ export default function HeroPage() {
                         <div className="col-sm-8">
                             <img src="/image12.jpg" style={{ width: '100%', border: '0.1px solid gray' }} />
                         </div>
-                        <div className="col-sm-4 p-5 d-flex align-items-center flex-column" style={{ border: '0.1px solid gray' }}>
+                        <div className="col-sm-4 p-5 d-flex align-items-center flex-column maskImageBg" style={{ border: '0.1px solid gray' }}>
                             <Swiper
                                 modules={[Pagination, Autoplay]}
                                 pagination={{ clickable: true }}
@@ -344,7 +344,7 @@ export default function HeroPage() {
             <section className="py-5 px-0 lg-p-5 md-p-5  featuresSection">
                 <div className="row m-4 d-flex gap-5">
                     {/* Left Side - Features */}
-                    <div className="col-sm-5">
+                    <div className="col-sm-4 mx-auto">
                         {features.map((feature, idx) => (
                             <div
                                 key={idx}
