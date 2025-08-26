@@ -9,8 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "@reduxjs/toolkit": "^2.8.2",
+    "bootstrap": "^5.3.7",
+    "framer-motion": "^12.23.12",
+    "next": "15.4.7",
     "react": "19.1.0",
+    "react-countup": "^6.5.3",
     "react-dom": "19.1.0",
-    "next": "15.4.7"
+    "react-hook-form": "^7.62.0",
+    "react-range-slider-input": "^3.2.1",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0",
+    "remixicon": "^4.6.0",
+    "swiper": "^11.2.10",
+    "yup": "^1.7.0"
   }
 }
