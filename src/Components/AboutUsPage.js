@@ -61,12 +61,12 @@ const AboutUs = () => {
             <section className="about-us-section">
                 <h1><span className="text-muted">About</span> Us</h1>
             </section>
-            <section className="p-2 p-lg-5">
+            <section className="p-4 p-lg-5">
                 <div className="container-fluid">
-                    <div className="row" style={{ padding: '0 70px' }}>
+                    <div className="row px-0  px-lg-5">
                         {advantages.map((adv, i) => (
-                            <div key={i} className="col-sm-4 d-flex flex-column gap-2 p-lg-4" >
-                                <Image src={adv.img} height={100} width={100} alt={adv.title} />
+                            <div key={i} className="col-12 col-lg-4 d-flex flex-column gap-2 p-lg-4" >
+                                <Image src={adv.img} height={100} width={100} alt={adv.title} className="img-fluid" />
                                 <h2>{adv.title}</h2>
                                 <p style={{ fontSize: '16px', paddingRight: '30px' }} className="text-muted">{adv.desc}</p>
                             </div>

@@ -193,6 +193,7 @@ export default function CheckOutCartItems() {
                     </div>
                 )
             }
+            <hr />
 
 
         </>

@@ -71,7 +71,7 @@ export default function ShopPage() {
                 { label: "SHOP", href: null },
             ]} />
 
-            <section className="py-5 mb-5">
+            <section className="py-lg-5 py-2">
                 <div className="container-fluid">
                     <div className="row my-5">
                         <div className="col-sm-10 mx-auto">

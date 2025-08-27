@@ -89,7 +89,7 @@ export default function CartPage() {
                                 </div>
                             </div>
                             {/* Coupon Section */}
-                            <form className="row align-items-lg-center mx-lg-5 mx-2">
+                            <form className="row align-items-lg-center mx-lg-5 mx-2 my-4 my-lg-0">
                                 <div className="col-lg-3 col-6 d-flex">
                                     <input placeholder="Coupon Code" className=" small" required/>
                                 </div>
@@ -130,8 +130,8 @@ export default function CartPage() {
                         </>
                     ) :
                         (
-                            <div className="d-flex justify-content-center flex-column align-items-center">
-                                <h2>Your cart is currently empty.</h2>
+                            <div className="d-flex justify-content-center flex-column align-items-center my-5">
+                                <h2 className="text-center">Your cart is currently empty.</h2>
                                 <button
                                     onClick={() => router.push('/shop')}
                                     className="pageBtn small ls-1"

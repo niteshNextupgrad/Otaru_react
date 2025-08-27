@@ -20,10 +20,10 @@ export default function Footer() {
 
   }
   return (
-    <div className="container-fluid p-5">
+    <div className="container-fluid p-4">
       <footer className="bg-dark-transparent text-white mt-0 mt-lg-5 ">
 
-        <div className="row g-5">
+        <div className="row g-4">
           {/* Logo & Info */}
           <div className="col-lg-3 col-6">
             <Image src="/image23.png" height={50} width={100} alt="logo" />

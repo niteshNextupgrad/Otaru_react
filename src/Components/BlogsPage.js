@@ -27,7 +27,7 @@ export default function BlogPage() {
                 { label: "BLOG", href: null },
             ]} />
 
-            <section className="py-5 mb-5 px-4 px-md-0">
+            <section className="py-lg-5 py-2 px-4 px-md-0">
                 <div className="container-fluid">
                     <div className="row my-5">
                         <div className="col-sm-10 mx-auto">

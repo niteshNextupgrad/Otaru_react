@@ -994,6 +994,9 @@ form {
 
 
 @media (max-width: 576px) {
+  .navbar {
+  background-color: #000;  
+}
   .heroSliderSection {
     /* margin-top: 20px; */
     height: 80vh;
@@ -1018,5 +1021,13 @@ form {
 
   .testimonial-card {
     max-width: 350px;
+  }
+
+  .Breadcrumb-section {
+    padding: 25px;
+    height: 150px;
+  }
+  .contact-us-section, .pricing-section{
+    height: 300px;
   }
 }
