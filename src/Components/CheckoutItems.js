@@ -80,8 +80,8 @@ export default function CheckOutCartItems() {
                                                 <table className="table table-transparent align-middle text-nowrap text-muted">
                                                     <thead>
                                                         <tr>
-                                                            <th>Product</th>
-                                                            <th>Subtotal</th>
+                                                            <td className="fs-4">Product</td>
+                                                            <td className="fs-4">Subtotal</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -95,8 +95,8 @@ export default function CheckOutCartItems() {
                                                                 <td>₹{(item.price * item.quantity).toFixed(2)}</td>
                                                             </tr>
                                                         ))}
-                                                        <tr>
-                                                            <th>Total</th>
+                                                        <tr className="fs-4">
+                                                            <td>Total</td>
                                                             <td>₹{subtotal.toFixed(2)}</td>
                                                         </tr>
                                                     </tbody>
@@ -159,7 +159,7 @@ export default function CheckOutCartItems() {
                                                     <p className="text-danger small">{errors.address?.message}</p>
                                                 </div>
                                                 <div>
-                                                    <button type="submit" className="pageBtn small ls-1">
+                                                    <button type="submit" className="pageBtn small ls-1 mb-sm-4">
                                                         Place Order <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
                                                     </button>
                                                 </div>

@@ -20,25 +20,25 @@ export default function Footer() {
 
   }
   return (
-    <div className="container-fluid p-lg-5 px-3 py-2">
+    <div className="container-fluid p-5">
       <footer className="bg-dark-transparent text-white mt-0 mt-lg-5 ">
 
-        <div className="row">
+        <div className="row g-5">
           {/* Logo & Info */}
-          <div className="col-md-3 mb-4">
+          <div className="col-lg-3 col-6">
             <Image src="/image23.png" height={50} width={100} alt="logo" />
             <p className="text-muted mt-4">For your creative output.</p>
             <small>© 2025 QODE INTERACTIVE</small>
           </div>
           {/* Address */}
-          <div className="col-md-3 mb-4 d-flex flex-column">
+          <div className="col-lg-3 col-6  d-flex flex-column">
             <h5 className="ls-1 fw-normal">Address</h5>
             <a className="mb-1 text-muted">46 Skabersjogatan < br />Malmo, Sweden</a>
             <a className="mb-1 text-muted">+44 1793 123 456</a>
             <a href="mailto:otaru@example.com" className="text-white text-muted text-decoration-none">otaru@example.com</a>
           </div>
           {/* Social Links */}
-          <div className="col-md-3 mb-4">
+          <div className="col-lg-3 col-6">
             <h5 className="ls-1 fw-normal">Social</h5>
             <ul className="list-unstyled">
               {["Instagram", "Twitter", "Dribbble", "LinkedIn"].map(s => (
@@ -49,7 +49,7 @@ export default function Footer() {
             </ul>
           </div>
           {/* Newsletter */}
-          <div className="col-md-3 mb-4">
+          <div className="col-lg-3 col-6">
             <h5 className="ls-1 fw-normal">Newsletter</h5>
             <p className="text-muted">Be up to date with new products.</p>
             <form className="newsLetterForm">

@@ -7,18 +7,16 @@ export default function InstagramAdvertize() {
   <div className="container-fluid">
     <div className="row">
       
-      {/* Left Side - Title */}
-      <div className="col-12 col-md-2 mb-4 mb-md-0">
+      <div className="col-12 col-lg-2 mb-4 mb-lg-0">
         <h2 className="fw-bold">Instagram</h2>
         <p className="text-muted mb-0">
           Follow us on <br /> <span className="fw-semibold">@otarutech</span>
         </p>
       </div>
 
-      {/* Right Side */}
-      <div className="col-12 col-md-10">
+
+      <div className="col-12 col-lg-10">
         
-        {/* Instagram Handle Row */}
         <div className="row mb-4">
           <div className="col-12 col-md-6 d-flex gap-3 align-items-center">
             <div>
@@ -34,7 +32,7 @@ export default function InstagramAdvertize() {
         {/* Instagram Images */}
         <div className="row g-3">
           {["/image27.jpg", "/image18.jpg", "/image19.jpg", "/image22.jpg"].map((src, idx) => (
-            <div key={idx} className="col-6 col-md-3">
+            <div key={idx} className="col-6 col-lg-3">
               <div className="insta-item position-relative overflow-hidden rounded-3">
                 <Image
                   className="insta-img w-100 h-100"

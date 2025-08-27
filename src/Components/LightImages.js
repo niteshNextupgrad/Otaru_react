@@ -4,8 +4,8 @@ export default function LightImages() {
     return (
         <section className="py-5">
             <div className="container-fluid">
-                <div className="row">
-                    <div className="col-sm-12 d-flex flex-md-row flex-column align-items-center justify-content-between flex-wrap gap-3">
+                <div className="row p-md-4 ">
+                    <div className="col-sm-12 d-flex flex-lg-row flex-md-row flex-column align-items-center  justify-content-between flex-wrap gap-lg-3 gap-5">
                         {["ltImge1", "ltImge2", "ltImge3", "ltImge4", "ltImge5", "ltImge6", "ltImge7", "ltImge8"].map((name) => (
                             <Image
                                 key={name}

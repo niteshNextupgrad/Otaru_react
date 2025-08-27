@@ -28,7 +28,7 @@ export default function PricingPage() {
             </section>
             <section className="py-5 px-3 px-md-5">
                 <div className="row justify-content-center">
-                    <div className="col-12 col-md-8 text-center d-flex flex-column justify-content-center align-items-center gap-4">
+                    <div className="col-12 col-lg-8 text-center d-flex flex-column justify-content-center align-items-center gap-4">
                         <h2 className="fs-1">
                             Keep track of the overall market trends & more
                         </h2>
@@ -44,7 +44,7 @@ export default function PricingPage() {
                     {pricing?.map((pr, index) => (
                         <div
                             key={index}
-                            className="col-12 col-md-6 col-lg-4 d-flex"
+                            className="col-12  col-lg-4 d-flex"
                         >
                             <div
                                 className={`flex-grow-1 d-flex flex-column gap-3 p-4 rounded-3 ${index === 1 ? "pricing-card" : "bg-dark text-white"

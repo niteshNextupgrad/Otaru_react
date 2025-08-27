@@ -2,80 +2,13 @@
 import Image from "next/image";
 import { useState } from "react";
 import BackToTopButton from "./BackToTopButton";
-import Link from "next/link";
 import Breadcrumb from "./Breadcrumb";
-
-const blogs = [
-    {
-        date: '12 MAY 2022',
-        image: '/Blogs/blog1.jpg',
-        title: 'What we do in life echoes in eternity',
-        description: `"Sit amet purus gravida quis blandit.
-      Erat velit scelerisque in dictum non consectetur a erat nam.
-      In metus vulputate eu scelerisque felis imperdiet. Adipiscing vitae proin sagittis nisl.
-      Purus viverra accumsan in nisl nisi scelerisque. At volutpat diam ut venenatis."`,
-        tags: ["Design", "Digital", "Marketing"],
-        socailLinks: [
-            { name: 'FACEBOOK', link: 'https://www.facebook.com' },
-            { name: 'LINKEDIN', link: 'https://www.linkedin.com' },
-            { name: 'TWITTER', link: 'https://www.x.com' },
-        ]
-    },
-    {
-        date: '12 MAY 2022',
-        image: '/Blogs/blog2.jpg',
-        title: 'Second Blog Example',
-        description: `"MSit amet purus gravida quis blandit. Erat velit scelerisque in dictum non consectetur a erat nam. In metus vulputate eu scelerisque felis imperdiet. Adipiscing vitae
-     proin sagittis nisl. Purus viverra accumsan in nisl nisi scelerisque. At volutpat diam ut venenatis"`,
-        tags: ["Design", "SEO"],
-        socailLinks: [
-            { name: 'FACEBOOK', link: 'https://www.facebook.com' },
-            { name: 'LINKEDIN', link: 'https://www.linkedin.com' },
-            { name: 'TWITTER', link: 'https://www.x.com' },
-        ]
-    },
-    {
-        date: '13 MAY 2022',
-        image: '/Blogs/blog3.jpg',
-        title: 'Third Blog Example',
-        description: `"Sit amet purus gravida quis blandit. Erat velit scelerisque in dictum non consectetur a erat nam. In metus vulputate eu scelerisque felis imperdiet. Adipiscing vitae proin sagittis
-     nisl. Purus viverra accumsan in nisl nisi scelerisque. At volutpat diam ut venenatis"`,
-        tags: ["UI/UX", "Branding"],
-        socailLinks: [
-            { name: 'FACEBOOK', link: 'https://www.facebook.com' },
-            { name: 'LINKEDIN', link: 'https://www.linkedin.com' },
-            { name: 'TWITTER', link: 'https://www.x.com' },
-        ]
-    },
-    {
-        date: '14 MAY 2022',
-        image: '/Blogs/blog4.jpg',
-        title: 'Fourth Blog Example',
-        description: `"Sit amet purus gravida quis blandit. Erat velit scelerisque in dictum non consectetur a erat nam. In metus vulputate eu scelerisque felis imperdiet. Adipiscing vitae proin sagittis nisl.
-     Purus viverra accumsan in nisl nisi scelerisque. At volutpat diam ut venenatis"`,
-        tags: ["Digital", "Marketing"],
-        socailLinks: [
-            { name: 'FACEBOOK', link: 'https://www.facebook.com' },
-            { name: 'LINKEDIN', link: 'https://www.linkedin.com' },
-            { name: 'TWITTER', link: 'https://www.x.com' },
-        ]
-    },
-    {
-        date: '14 MAY 2022',
-        image: '/Blogs/blog1.jpg',
-        title: 'Fifth Blog Title',
-        description: `"Sit amet purus gravida quis blandit. Erat velit scelerisque in dictum non consectetur a erat nam. In metus vulputate eu scelerisque felis imperdiet. Adipiscing vitae proin sagittis nisl.
-     Purus viverra accumsan in nisl nisi scelerisque. At volutpat diam ut venenatis"`,
-        tags: ["Digital", "Marketing", "Designing"],
-        socailLinks: [
-            { name: 'FACEBOOK', link: 'https://www.facebook.com' },
-            { name: 'LINKEDIN', link: 'https://www.linkedin.com' },
-            { name: 'TWITTER', link: 'https://www.x.com' },
-        ]
-    },
-]
+import { blogData } from "@/Data/blogs";
+import { useRouter } from "next/navigation";
 
 export default function BlogPage() {
+    const router=useRouter()
+    const [blogs, setBlogs] = useState(blogData)
     const [currentPage, setCurrentPage] = useState(1);
     const perPageBlog = 3;
 
@@ -101,7 +34,7 @@ export default function BlogPage() {
 
                             <div className="row">
                                 {selectedBlogs.map((blog, index) => (
-                                    <div key={index} className="col-12 p-0 d-flex flex-column gap-4 py-5 mb-4">
+                                    <div key={index} className="col-12 p-0 d-flex flex-column gap-4 py-5 mb-4" onClick={() => router.push(`/blog/${blog.id}`)}>
                                         <Image
                                             src={blog.image}
                                             width={1125}
@@ -118,14 +51,14 @@ export default function BlogPage() {
                                                 <h2 className="fs-1 transitionText mb-4">{blog.title}</h2>
                                                 <p className="text-muted small ls-1">{blog.description}</p>
                                             </div>
-                                            <div className="d-flex flex-wrap justify-content-between gap-2">
+                                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
                                                 <div className="d-flex flex-wrap gap-2">
                                                     {blog.tags.map((type, idx) => (
                                                         <button key={idx} className="pageBtn py-1 px-4">{type}</button>
                                                     ))}
                                                 </div>
                                                 <div className="d-flex flex-wrap gap-2">
-                                                    {blog.socailLinks.map((sl, idx) => (
+                                                    {blog.socialLinks.map((sl, idx) => (
                                                         <a key={idx} href={sl.link} target="_blank" className="text-muted small-text">{sl.name}</a>
                                                     ))}
                                                 </div>

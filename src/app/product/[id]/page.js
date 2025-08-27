@@ -46,7 +46,7 @@ export default function ProductPage() {
                     <div className="col-10 col-md-6 mx-auto text-center d-flex justify-content-center flex-column align-items-center">
                         <h2>Product Not Found!.</h2>
                         <button
-                            onClick={() => router.push('/shop')}
+                            onClick={() => router.replace('/shop')}
                             className="pageBtn small ls-1 mt-3"
                         >
                             Return to shop page <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>

@@ -25,7 +25,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`navbar navbar-expand-lg fixed-top px-4 px-md-5 ${isScrolled ? "navbar-scrolled bg-dark" : "bg-dark-transparent p-lg-5"
+        className={`navbar navbar-expand-lg fixed-top px-4 ${isScrolled ? "navbar-scrolled bg-dark" : "bg-dark-transparent p-lg-5"
           }`}
         style={{ transition: "all 0.3s ease" }}
       >
@@ -97,7 +97,7 @@ export default function Navbar() {
               </ul>
             </li> */}
           </ul>
-
+          
           {/* Right side Cart + Button (desktop only) */}
           <div className="d-none d-lg-flex align-items-center gap-3">
             <Link href='/cart' className="text-white">Cart ({cartCount || 0})</Link>

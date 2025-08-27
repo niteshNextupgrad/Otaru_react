@@ -78,7 +78,7 @@ export default function ShopPage() {
                             <div className="row">
                                 {
                                     selectedProducts.length > 0 ? (
-                                        <div className="col-sm-9">
+                                        <div className="col-lg-9">
                                             <div className="row">
                                                 <div className="col-sm-12 text-muted d-flex justify-content-between align-items-center py-2">
                                                     <p className="m-0">
@@ -123,7 +123,7 @@ export default function ShopPage() {
                                                 ))}
                                             </div>
                                             {/* Pagination */}
-                                            <div className="row mt-4">
+                                            <div className="row my-4">
                                                 <div className="col-sm-12 d-flex justify-start-between align-items-center p-0">
                                                     <button
                                                         className="border-0 bg-dark text-light px-2"
@@ -161,7 +161,7 @@ export default function ShopPage() {
                                         </div>
                                     )
                                 }
-                                <div className="col-sm-3 px-3">
+                                <div className="col-lg-3 px-3">
                                     <div>
                                         <form onSubmit={searchProduct}>
                                             <input placeholder="Serach Products" onChange={(e) => setSearchTerm(e.target.value)} />

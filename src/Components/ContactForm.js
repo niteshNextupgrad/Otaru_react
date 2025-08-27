@@ -20,8 +20,7 @@ export default function ContactForm() {
     };
     return (
         <>
-
-            <div className="col-sm-5 mx-auto mt-4">
+            <div className="col-lg-5 col-12 mx-auto mt-4">
                 <div className="row">
                     <div className="col-sm-6 mb-3">
                         <input
@@ -58,7 +57,7 @@ export default function ContactForm() {
                 </div>
 
                 <div className="row mt-2">
-                    <div className="col-sm-12 text-end" style={{display:'flex', justifyContent:'end'}}>
+                    <div className="col-sm-12 text-end" style={{ display: 'flex', justifyContent: 'end' }}>
                         <button
                             type="button"
                             onClick={handleSubmit(onSubmit)}

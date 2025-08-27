@@ -56,7 +56,7 @@ export default function OurTeam() {
 
             <section className="px-5" style={{ padding: '80px 0' }}>
                 <div className="row mb-5">
-                    <div className="col-sm-3">
+                    <div className="col-lg-3 col-6">
                         <small className="text-muted">TECHNOLOGY</small>
                         <h2>Get to know our team members</h2>
                     </div>

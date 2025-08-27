@@ -12,6 +12,7 @@ import Image from "next/image";
 import LightImages from "./LightImages";
 import InstagramAdvertize from "./InstagramAdvertize";
 import ContactForm from "./ContactForm";
+import BackToTopButton from "./BackToTopButton";
 
 const slides = [
     {
@@ -103,11 +104,12 @@ export default function HeroPage() {
         const vid = document.getElementById("myVideo");
         vid.play();
         setIsPlaying(true); // mark as playing
-        vid.setAttribute("controls","true")
+        vid.setAttribute("controls", "true")
     };
 
     return (
         <>
+            {/* <BackToTopButton /> */}
             <div className="w-100 heroSliderSection position-relative">
                 <Swiper
                     modules={[Autoplay, EffectFade]}
@@ -139,7 +141,7 @@ export default function HeroPage() {
                 </Swiper>
 
 
-                <div className="customNavWrapper d-none d-md-flex">
+                <div className="customNavWrapper d-none d-lg-flex">
                     <button onClick={() => swiperRef.current?.slidePrev()}
                         className="customNavBtn1 custom-prev">
                         <i className="ri-arrow-left-double-line"></i>
@@ -152,9 +154,9 @@ export default function HeroPage() {
             </div>
 
             <section className="p-5">
-                <div className="row px-0 px-sm-5 px-md-5 px-lg-5">
+                <div className="row px-0  px-lg-5">
                     {advantages.map((adv, i) => (
-                        <div key={i} className="col-sm-12 col-md-6 col-lg-4  d-flex flex-column gap-2 p-lg-4" >
+                        <div key={i} className="col-12 col-lg-4 d-flex flex-column gap-2 p-lg-4" >
                             <Image src={adv.img} height={100} width={100} alt={adv.title} className="img-fluid" />
                             <h2>{adv.title}</h2>
                             <p style={{ fontSize: '16px', paddingRight: '30px' }} className="text-muted">{adv.desc}</p>
@@ -166,8 +168,7 @@ export default function HeroPage() {
             <section className="py-5 px-2 p-md-5">
                 <div className="container-fluid">
                     <div className="row">
-                        {/* Left Column */}
-                        <div className="col-12 col-md-4 mb-4">
+                        <div className="col-12 col-lg-4 mb-4">
                             <span className="text-muted" style={{ fontSize: '12px' }}>TECHNOLOGY</span>
                             <div className="d-flex gap-4 flex-column mb-4">
                                 <h2 className="fs-2 fs-md-1">Something truly exciting for us all</h2>
@@ -180,11 +181,9 @@ export default function HeroPage() {
                             </Link>
                         </div>
 
-                        {/* Right Column */}
-                        <div className="col-12 col-md-8">
+                        <div className="col-12 col-lg-8">
                             <div className="row g-4">
-                                {/* First Image */}
-                                <div className="col-12 col-sm-6">
+                                <div className="col-12 col-lg-6">
                                     <div className="image-container position-relative">
                                         <Image
                                             src="/image07.jpg"
@@ -210,9 +209,7 @@ export default function HeroPage() {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Second Image */}
-                                <div className="col-12 col-sm-6">
+                                <div className="col-12 col-lg-6 ">
                                     <div className="image-container position-relative">
                                         <Image
                                             src="/image09.jpg"
@@ -245,7 +242,7 @@ export default function HeroPage() {
             </section>
 
 
-            <section className="py-5 px-0 lg-p-5 md-p-5">
+            <section className="py-5 px-4 lg-px-5">
                 <div className="container-fluid video-wrapper">
                     <video
                         id="myVideo"
@@ -273,69 +270,68 @@ export default function HeroPage() {
             </section>
 
             <section className="p-0 lg-p-5 md-p-5 d-flex justify-content-center align-items-center">
-                <h2 className="w-75">Reach out to us anytime and lets create a better future for all technology users <s>together, forever. We are open</s> to all types of collab offers and tons more.
+                <h2 className="w-75 lh-sm">Reach out to us anytime and lets create a better future for all technology users <s>together, forever. We are open</s> to all types of collab offers and tons more.
                 </h2>
             </section>
 
-            <section className="py-5 px-0 px-lg-5 lg-p-5 md-p-5 quotesSection">
-                <div className="container-fluid">
-                    <div className="row ">
-                        <div className="col-sm-8">
-                            <img src="/image12.jpg" style={{ width: '100%', border: '0.1px solid gray' }} />
+            <section className="py-5 px-4 px-lg-5 lg-p-5 md-p-5 quotesSection">
+                <div className="container-fluid ">
+                    <div className="row g-lg-0 g-4">
+                        <div className="col-lg-8 col-12">
+                            <img src="/image12.jpg" style={{ width: '100%' }} />
                         </div>
-                        <div className="col-sm-4 p-5 d-flex align-items-center flex-column maskImageBg" style={{ border: '0.1px solid gray' }}>
-                            <Swiper
-                                modules={[Pagination, Autoplay]}
-                                pagination={{ clickable: true }}
-                                autoplay={{
-                                    delay: 3000, // 3 seconds
-                                    disableOnInteraction: false, // keep autoplay after manual swipe
-                                }}
-                                spaceBetween={30}
-                                slidesPerView={1}
-                                style={{ overflow: 'hidden', maxWidth: '100%' }}
-                            >
-                                <SwiperSlide>
-                                    <div className="my-4 d-flex align-items-center flex-column text-center text-white">
-                                        <p className="text-muted">
-                                            "This handy tool helps you create dummy text for all your layout needs.
-                                            We are gradually adding new functionality and we welcome your suggestions and feedback."
+                        <div className="col-lg-4 col-12 p-5 " style={{ border: '0.1px solid gray' }}>
+                            <div className="mx-3 d-flex align-items-center flex-column">
+                                <Swiper
+                                    modules={[Pagination, Autoplay]}
+                                    pagination={{ clickable: true }}
+                                    autoplay={{
+                                        delay: 3000, // 3 seconds
+                                        disableOnInteraction: false, // keep autoplay after manual swipe
+                                    }}
+                                    spaceBetween={30}
+                                    slidesPerView={1}
+                                    style={{ overflow: 'hidden', maxWidth: '100%' }}
+                                >
+                                    <SwiperSlide>
+                                        <div className="my-4 d-flex align-items-center flex-column text-center text-white maskImageBg">
+                                            <p className="text-muted">
+                                                "This handy tool helps you create dummy text for all your layout needs.
+                                                We are gradually adding new functionality and we welcome your suggestions and feedback."y and we welcome your suggestions and feedback."
+                                            </p>
+                                            <strong>Signature</strong>
+                                            <p>DESIGNER</p>
+                                        </div>
+                                    </SwiperSlide>
 
-                                            "This handy tool helps you create
-                                            We are gradually adding new functionality and we welcome your suggestions and feedback."
-                                        </p>
-                                        <strong>Signature</strong>
-                                        <p>DESIGNER</p>
-                                    </div>
-                                </SwiperSlide>
+                                    <SwiperSlide>
+                                        <div className="my-4 d-flex align-items-center flex-column text-center maskImageBg">
+                                            <p className="text-muted">
+                                                "This handy tool helps you create dummy text for all your layout needs.
+                                                We are gradually adding new functionality."
 
-                                <SwiperSlide>
-                                    <div className="my-4 d-flex align-items-center flex-column text-center">
-                                        <p className="text-muted">
-                                            "This handy tool helps you create dummy text for all your layout needs.
-                                            We are gradually adding new functionality."
+                                                "This handy tool helps you create
+                                                We are gradually adding new functionality and we welcome your suggestions and feedback."
+                                            </p>
+                                            <strong>Signature</strong>
+                                            <p>DEVELOPER</p>
+                                        </div>
+                                    </SwiperSlide>
 
-                                            "This handy tool helps you create
-                                            We are gradually adding new functionality and we welcome your suggestions and feedback."
-                                        </p>
-                                        <strong>Signature</strong>
-                                        <p>DEVELOPER</p>
-                                    </div>
-                                </SwiperSlide>
+                                    <SwiperSlide>
+                                        <div className="my-4 d-flex align-items-center flex-column text-center maskImageBg">
+                                            <p className="text-muted">
+                                                "Another testimonial goes here with custom content to showcase carousel usage."
 
-                                <SwiperSlide>
-                                    <div className="my-4 d-flex align-items-center flex-column text-center">
-                                        <p className="text-muted">
-                                            "Another testimonial goes here with custom content to showcase carousel usage."
-
-                                            "This handy tool helps you create dummy text for all your layout needs.
-                                            We are gradually adding new functionality and we welcome your suggestions and feedback."
-                                        </p>
-                                        <strong>Signature</strong>
-                                        <p>MANAGER</p>
-                                    </div>
-                                </SwiperSlide>
-                            </Swiper>
+                                                "This handy tool helps you create dummy text for all your layout needs.
+                                                We are gradually adding new functionality and we welcome your suggestions and feedback."
+                                            </p>
+                                            <strong>Signature</strong>
+                                            <p>MANAGER</p>
+                                        </div>
+                                    </SwiperSlide>
+                                </Swiper>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -344,7 +340,7 @@ export default function HeroPage() {
             <section className="py-5 px-0 lg-p-5 md-p-5  featuresSection">
                 <div className="row m-4 d-flex gap-5">
                     {/* Left Side - Features */}
-                    <div className="col-sm-4 mx-auto">
+                    <div className="col-12 col-lg-4 mx-auto">
                         {features.map((feature, idx) => (
                             <div
                                 key={idx}
@@ -352,7 +348,7 @@ export default function HeroPage() {
                                 onMouseEnter={() => setActiveImage(feature.img)}
                                 style={{ cursor: "pointer" }}
                             >
-                                <h3 className="transitionText">{feature.title}</h3>
+                                <h3 className="transitionText fs-1">{feature.title}</h3>
                                 <p className="text-muted">{feature.text}</p>
                                 <hr />
                             </div>
@@ -360,13 +356,13 @@ export default function HeroPage() {
                     </div>
 
                     {/* Right Side - Image */}
-                    <div className="col-sm-6 d-flex justify-content-center align-items-center">
+                    <div className="col-lg-6 col-12 d-flex justify-content-center align-items-center">
                         <Image
                             src={activeImage}
                             height={550}
                             width={550}
                             alt="Feature image"
-                            className="rounded shadow img-fluid"
+                            className="rounded img-fluid w-100"
                         />
                     </div>
                 </div>
@@ -397,11 +393,11 @@ export default function HeroPage() {
 
             <section className="py-5 productSection">
                 <div className="container-fluid">
-                    <div className="row ">
+                    <div className="row g-4 g-lg-0">
                         {products.map((item, i) => (
                             <div
                                 key={i}
-                                className="col-sm-3 d-flex justify-content-center align-items-center"
+                                className="col-lg-3 col-md-6 col-12 d-flex justify-content-center align-items-center"
                                 style={{ position: "relative" }}
                             >
                                 <div>
@@ -427,11 +423,11 @@ export default function HeroPage() {
                     </div>
                 </div>
             </section>
-            
+
             <section className="contactSection" style={{ padding: '80px 40px' }}>
                 <div className="container">
                     <div className="row">
-                        <div className="col-sm-6 d-flex flex-column gap-4">
+                        <div className="col-lg-6 col-12 d-flex flex-column gap-4">
                             <h2>
                                 Don{`'`}t hesitate to
                                 contact us whenever!

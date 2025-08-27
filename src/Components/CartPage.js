@@ -40,7 +40,7 @@ export default function CartPage() {
                                             <tbody>
                                                 {cartItems.map(item => (
                                                     <tr key={item.id}>
-                                                        <td className="d-flex gap-2 align-items-center align-middle">
+                                                        <td className="d-flex gap-2 align-items-center align-middle pe-2">
                                                             <button
                                                                 className="text-light bg-dark border-0 fw-bold rounded-circle"
                                                                 onClick={() => removeFromCart(item.id)}
@@ -54,11 +54,11 @@ export default function CartPage() {
                                                                 alt={item?.title || "img"}
                                                                 className="rounded"
                                                             />
-                                                            <span className="fs-6 fs-md-5 transitionText">
+                                                            <span className="fs-6 transitionText"  style={{wordBreak:'break-word'}}>
                                                                 {item.title}</span>
                                                         </td>
-                                                        <td className="align-middle">₹{item.price.toFixed(2)}</td>
-                                                        <td className="align-middle">
+                                                        <td className="align-middle pe-2">₹{item.price.toFixed(2)}</td>
+                                                        <td className="align-middle pe-2">
                                                             <div className="d-flex ">
                                                                 <button className="cartBtn quantityBtn">{item.quantity}</button>
                                                                 <div className="d-flex flex-column position-relative">
@@ -89,11 +89,11 @@ export default function CartPage() {
                                 </div>
                             </div>
                             {/* Coupon Section */}
-                            <div className="row align-items-center mx-5">
-                                <div className="col-sm-3 d-flex">
+                            <div className="row align-items-lg-center mx-lg-5 mx-2">
+                                <div className="col-lg-3 col-6 d-flex">
                                     <input placeholder="Coupon Code" className="couponInput small" />
                                 </div>
-                                <div className="col-sm-3">
+                                <div className="col-lg-3 col-6">
                                     <button className="pageBtn small py-0 mt-0">
                                         Apply Coupon <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
                                     </button>
@@ -101,7 +101,7 @@ export default function CartPage() {
                             </div>
 
                             {/* Totals */}
-                            <div className="row mx-2 mx-md-5 my-4 my-md-5">
+                            <div className="row mx-2 mx-lg-5 my-4 my-lg-5">
                                 <div className="col-12 col-md-6 d-flex flex-column gap-3">
                                     <h2 className="ls-1">Cart totals</h2>
                                     <div className="table-responsive">
