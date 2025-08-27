@@ -995,7 +995,7 @@ form {
 
 @media (max-width: 576px) {
   .heroSliderSection {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     height: 80vh;
   }
 

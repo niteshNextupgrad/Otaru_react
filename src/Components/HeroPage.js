@@ -128,7 +128,7 @@ export default function HeroPage() {
                                 }}
                             >
                                 <div className="position-relative px-lg-3">
-                                    <h2 className="display-5 display-md-2 w-75 ls-1 mb-5">{slide.title}</h2>
+                                    <h2 className="display-2 display-md-3 w-100 w-md-75 ls-1 mb-5">{slide.title}</h2>
                                     <Link href="/shop" className="pageBtn">
                                         View More
                                     </Link>
