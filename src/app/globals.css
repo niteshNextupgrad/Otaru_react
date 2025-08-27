@@ -994,6 +994,11 @@ form {
 
 
 @media (max-width: 576px) {
+  .heroSliderSection {
+    margin-top: 20px;
+    height: 80vh;
+  }
+
   h2 {
     letter-spacing: 1;
     font-weight: normal !important;

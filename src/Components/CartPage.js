@@ -89,16 +89,16 @@ export default function CartPage() {
                                 </div>
                             </div>
                             {/* Coupon Section */}
-                            <div className="row align-items-lg-center mx-lg-5 mx-2">
+                            <form className="row align-items-lg-center mx-lg-5 mx-2">
                                 <div className="col-lg-3 col-6 d-flex">
-                                    <input placeholder="Coupon Code" className="couponInput small" />
+                                    <input placeholder="Coupon Code" className=" small" required/>
                                 </div>
                                 <div className="col-lg-3 col-6">
-                                    <button className="pageBtn small py-0 mt-0">
+                                    <button className="pageBtn small py-0 mt-0" type="submit">
                                         Apply Coupon <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </form>
 
                             {/* Totals */}
                             <div className="row mx-2 mx-lg-5 my-4 my-lg-5">

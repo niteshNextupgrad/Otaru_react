@@ -12,7 +12,6 @@ import Image from "next/image";
 import LightImages from "./LightImages";
 import InstagramAdvertize from "./InstagramAdvertize";
 import ContactForm from "./ContactForm";
-import BackToTopButton from "./BackToTopButton";
 
 const slides = [
     {
@@ -109,7 +108,6 @@ export default function HeroPage() {
 
     return (
         <>
-            {/* <BackToTopButton /> */}
             <div className="w-100 heroSliderSection position-relative">
                 <Swiper
                     modules={[Autoplay, EffectFade]}
@@ -130,7 +128,7 @@ export default function HeroPage() {
                                 }}
                             >
                                 <div className="position-relative px-lg-3">
-                                    <h2 className="display-2 w-75 ls-1 mb-5">{slide.title}</h2>
+                                    <h2 className="display-5 display-md-2 w-75 ls-1 mb-5">{slide.title}</h2>
                                     <Link href="/shop" className="pageBtn">
                                         View More
                                     </Link>
