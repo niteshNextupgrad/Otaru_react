@@ -62,14 +62,16 @@ const AboutUs = () => {
                 <h1><span className="text-muted">About</span> Us</h1>
             </section>
             <section className="p-2 p-lg-5">
-                <div className="row" style={{ padding: '0 70px' }}>
-                    {advantages.map((adv, i) => (
-                        <div key={i} className="col-sm-4 d-flex flex-column gap-2 p-lg-4" >
-                            <Image src={adv.img} height={100} width={100} alt={adv.title} />
-                            <h2>{adv.title}</h2>
-                            <p style={{ fontSize: '16px', paddingRight: '30px' }} className="text-muted">{adv.desc}</p>
-                        </div>
-                    ))}
+                <div className="container-fluid">
+                    <div className="row" style={{ padding: '0 70px' }}>
+                        {advantages.map((adv, i) => (
+                            <div key={i} className="col-sm-4 d-flex flex-column gap-2 p-lg-4" >
+                                <Image src={adv.img} height={100} width={100} alt={adv.title} />
+                                <h2>{adv.title}</h2>
+                                <p style={{ fontSize: '16px', paddingRight: '30px' }} className="text-muted">{adv.desc}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
             <section className="p-4 p-md-5">
@@ -173,7 +175,7 @@ const AboutUs = () => {
             <section className="client-section text-white">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-12 col-md-7 p-0">
+                        <div className="col-12 col-md-7 px-2-0">
                             <div className="testimonial-bg d-flex align-items-center justify-content-center">
                                 <div className="testimonial-card p-4 p-md-5">
                                     <Swiper
@@ -193,8 +195,6 @@ const AboutUs = () => {
                                             </SwiperSlide>
                                         ))}
                                     </Swiper>
-
-                                    {/* Custom Navigation */}
                                     <div className="d-flex justify-content-start mt-3">
                                         <button
                                             className="nav-btn1 me-1"
@@ -215,7 +215,15 @@ const AboutUs = () => {
                         <div className="col-12 col-md-4 d-flex flex-column justify-content-between bg-black px-4 px-md-5 py-4 mx-0 mx-md-4">
                             <div>
                                 <h1 className="display-1 fw-bold counter-text">
-                                    <CountUp start={240} duration={5} end={250} />+
+                                    <CountUp start={240} end={250} delay={5} duration={8} enableScrollSpy={true}>
+                                        {({ countUpRef, start }) => (
+                                            <div>
+                                                <span ref={countUpRef} />
+                                                +
+                                            </div>
+                                        )}
+                                    </CountUp>
+                                    {/* <CountUp start={240} duration={5} end={250} enableScrollSpy={true} />+ */}
                                 </h1>
                                 <h4 className="mb-4">
                                     Happy clients inspired by our loyalty and quality
