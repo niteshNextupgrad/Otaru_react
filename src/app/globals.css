@@ -151,6 +151,14 @@ a:hover {
   transition: 0.3s;
 }
 
+nav .userIcon{
+  position: relative;
+}
+.userIcon button{
+  position: absolute;
+  right: -30px;
+}
+
 footer a {
   text-decoration: none;
 }
@@ -426,7 +434,7 @@ h2 {
 
 .transitionText {
   color: rgba(255, 255, 255, 0.85);
-  transition: all ease 0.3s;
+  transition: all ease 0.8s !important;
 }
 
 .transitionText:hover {
@@ -435,8 +443,7 @@ h2 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* fallback for non-webkit */
-  transition: all ease 0.3s;
+  transition: all ease 0.3s !important;
 }
 
 
@@ -993,10 +1000,27 @@ form {
 }
 
 
+/* // admin login  */
+.dahboardMenuBtn {
+  height: 30px;
+  width: 40px;
+  border-radius: 5px;
+  border: none;
+  background: green;
+  color: #fff;
+  padding: 2px 10px;
+}
+
+
+
+
+
+
 @media (max-width: 576px) {
   .navbar {
-  background-color: #000;  
-}
+    background-color: #000;
+  }
+
   .heroSliderSection {
     /* margin-top: 20px; */
     height: 80vh;
@@ -1027,7 +1051,10 @@ form {
     padding: 25px;
     height: 150px;
   }
-  .contact-us-section, .pricing-section{
+
+  .contact-us-section,
+  .pricing-section,
+  .our-team-section {
     height: 300px;
   }
 }

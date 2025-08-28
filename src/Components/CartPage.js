@@ -14,6 +14,11 @@ export default function CartPage() {
     // calculate subtotal/total
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
+
+    const handleApplyCoupon=(e)=>{
+        e.preventDefault()
+    }
+
     return (
         <>
             <Breadcrumb paths={[
@@ -89,7 +94,7 @@ export default function CartPage() {
                                 </div>
                             </div>
                             {/* Coupon Section */}
-                            <form className="row align-items-lg-center mx-lg-5 mx-2 my-4 my-lg-0">
+                            <form className="row align-items-lg-center mx-lg-5 mx-2 my-4 my-lg-0" onSubmit={handleApplyCoupon}>
                                 <div className="col-lg-3 col-6 d-flex">
                                     <input placeholder="Coupon Code" className=" small" required/>
                                 </div>

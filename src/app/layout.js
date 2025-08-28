@@ -1,3 +1,4 @@
+"use client"
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
@@ -6,23 +7,31 @@ import "./globals.css";
 import "remixicon/fonts/remixicon.css";
 // import { CartProvider } from "@/ContextApi/CartContext";
 import ReduxProvider from "@/Redux/ReduxProvider";
+import { usePathname } from "next/navigation";
 
-export const metadata = {
-  title: "My Website - Otaru",
-  description: "Next.js + Bootstrap",
-};
+
+//this will not work on client side rendering
+// export const metadata = {
+//   title: "My Website - Otaru",
+//   description: "Next.js + Bootstrap",
+// };
 
 export default function RootLayout({ children }) {
+  const pathName = usePathname()
+  // console.log(pathName);
+  let hideLayout = false
+  if (pathName.startsWith('/admin')) {
+    hideLayout = true
+  }
+
   return (
     <html lang="en">
       <body>
         <ReduxProvider>
-          {/* <CartProvider> */}
           <BootstrapClient />
-          <Navbar />
+          {!hideLayout && <Navbar />}
           <div className="">{children}</div>
-          <Footer />
-          {/* </CartProvider> */}
+          {!hideLayout && <Footer />}
         </ReduxProvider>
       </body>
     </html>

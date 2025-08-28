@@ -5,12 +5,38 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname hook
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { logout } from "@/Redux/Slices/authSlice";
 
+const menus = [
+  {
+    label: 'Home',
+    link: '/'
+  },
+  {
+    label: 'Blog',
+    link: '/blogs'
+  },
+  {
+    label: 'Shop',
+    link: '/shop'
+  },
+  {
+    label: 'Contact',
+    link: '/contact-us'
+  },
+]
 export default function Navbar() {
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  const router = useRouter()
   const { cartCount } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userLogged, setUserLogged] = useState(false)
+  const [showLogoutBtn, setShowLogoutBtn] = useState(false)
 
   const pathname = usePathname(); // Get the current pathname
 
@@ -34,6 +60,34 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (user?.userType === 'user') {
+      setUserLogged(true)
+    }
+  }, [user])
+
+  const logoutUser = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await dispatch(logout())
+        Swal.fire({
+          title: "Auth",
+          icon: "success",
+          text: "Logout Success!",
+        })
+        setUserLogged(false)
+        router.push('/')
+      }
+    });
+  }
   return (
     <>
       <nav
@@ -47,6 +101,7 @@ export default function Navbar() {
 
         {/* Right side on mobile: Cart + Toggle */}
         <div className="d-flex align-items-center ms-auto d-lg-none">
+
           <Link href="/cart" className="text-white">
             Cart ({cartCount || 0})
           </Link>
@@ -65,11 +120,15 @@ export default function Navbar() {
         <div className={`collapse navbar-collapse justify-content-between p-0 m-0 ${menuOpen ? "show" : ""}`}>
           {/* Menu items (left side on desktop) */}
           <ul className="navbar-nav d-flex flex-lg-row gap-lg-4">
-            <li className="nav-item">
-              <Link className="nav-link text-white" href="/">
-                Home
-              </Link>
-            </li>
+            {
+              menus?.map((menu, index) => (
+                <li className="nav-item" key={index}>
+                  <Link className="nav-link text-white" href={menu?.link}>
+                    {menu.label}
+                  </Link>
+                </li>
+              ))
+            }
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle text-white"
@@ -99,25 +158,30 @@ export default function Navbar() {
                 </li>
               </ul>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link text-white" href="/blogs">
-                Blog
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-white" href="/shop">
-                Shop
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-white" href="/contact-us">
-                Contact
-              </Link>
-            </li>
+            {!userLogged && (
+              <li className="nav-item">
+                <Link className="nav-link text-white" href='/user-login'>
+                  Login
+                </Link>
+              </li>
+            )}
           </ul>
 
           {/* Right side Cart + Button (desktop only) */}
           <div className="d-none d-lg-flex align-items-center gap-3">
+            {
+              userLogged && (
+                <div className="userIcon" >
+                  <div onClick={() => setShowLogoutBtn(!showLogoutBtn)}>
+                    <Image src='/user.png' alt="user" height={30} width={30} />
+                  </div>
+
+                  {showLogoutBtn && <div className="">
+                    <button className="pageBtn logoutBtn" onClick={logoutUser}>Logout</button>
+                  </div>}
+                </div>
+              )
+            }
             <Link href="/cart" className="text-white">
               Cart ({cartCount || 0})
             </Link>
