@@ -45,7 +45,7 @@ const data = blogData || [];
 const Page = () => {
   return (
     <AdminLayout>
-      <h2>Manage Products</h2>
+      <h2 className="mb-2">Manage Products</h2>
       <TransparentDataTable columns={columns} data={data} />
     </AdminLayout>
   )

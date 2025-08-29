@@ -173,7 +173,7 @@ export default function Navbar() {
               userLogged && (
                 <div className="userIcon" >
                   <div onClick={() => setShowLogoutBtn(!showLogoutBtn)}>
-                    <Image src='/user.png' alt="user" height={30} width={30} />
+                    <Image src='/user.png' alt="user" height={30} width={30} title={user?.email || "User"}/>
                   </div>
 
                   {showLogoutBtn && <div className="">

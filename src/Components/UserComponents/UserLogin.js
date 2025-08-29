@@ -10,6 +10,7 @@ import SwalFire from "@/Helpers/SwalFire";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "../Breadcrumb";
 import Link from "next/link";
+import { userLogin } from "@/Services";
 
 
 const LoginSchema = Yup.object().shape({
@@ -27,16 +28,22 @@ export default function UserLogin() {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) })
 
-    const handleAdminLogin = async (payload) => {
-        // console.log(payload, "payload from form");
-        if (payload.email === 'user@gmail.com' && payload.password === 'User@123') {
-            dispatch(login({ ...payload, userType: 'user' }))
-            SwalFire("Login", "success", "Login success!")
-            reset()
-            router.push("/");
-        }
-        else {
-            SwalFire("Login", "error", "Inivalid username or password!!")
+    const handleUserLogin = async (payload) => {
+        try {
+            const response = await userLogin(payload)
+            // console.log(response);
+            if (response.success) {
+                dispatch(login(response.data))
+                SwalFire("Login", "success", response.message)
+                reset()
+                router.push("/");
+            }
+            else {
+                SwalFire("Login", "error", response.message)
+            }
+        } catch (error) {
+            console.error('login failed', error)
+            SwalFire("Login", "error", "internal Server Error")
         }
     }
     return (
@@ -49,7 +56,7 @@ export default function UserLogin() {
             <div className="container py-3">
                 <div className="row align-items-center">
                     <div className="col-10 col-lg-5 border-dark border rounded-2 mx-auto py-3">
-                        <form className="d-flex flex-column gap-2" onSubmit={handleSubmit(handleAdminLogin)}>
+                        <form className="d-flex flex-column gap-2" onSubmit={handleSubmit(handleUserLogin)}>
                             <div className="text-center">
                                 <Image height={60} width={60} alt="logo" src='/ltImge7.png' />
                                 <p className="fs-5 text-center mb-3">Log in to explore more.</p>

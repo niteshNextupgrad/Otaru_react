@@ -10,28 +10,43 @@ import SwalFire from "@/Helpers/SwalFire";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "../Breadcrumb";
 import Link from "next/link";
+import { userRegiser } from "@/Services";
 
 
 const LoginSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required!").min(3, "not a valid password!")
+    password: Yup.string().required("Password is required!").min(6, "password should be minimum 6 characters long!")
 })
 export default function UserRegister() {
     const router = useRouter()
-    const dispatch = useDispatch()
-
 
     const [showPassword, setShowPassword] = useState(false)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) })
 
-    const handleAdminRegister = async (payload) => {
-        const payloadToSend = { ...payload, userType: "user" };
-        console.log(payloadToSend, "");
-        SwalFire("Register", "success", "Account Registered successfully!")
-        reset()
-    }
+    const handleUserRegister = async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append("name", data.name);
+            formData.append("email", data.email);
+            formData.append("password", data.password);
+            if (data.profileImage?.[0]) {
+                formData.append("profileImage", data.profileImage[0]);
+            }
+
+            const response = await userRegiser(formData);
+            if (response.success) {
+                SwalFire("Register", "success", response?.message);
+                reset();
+            } else {
+                SwalFire("Register", "error", response?.message);
+            }
+        } catch (error) {
+            console.error("failed to register user", error);
+            SwalFire("Register", "error", "Internal Server Error");
+        }
+    };
     return (
         <>
             <Breadcrumb paths={[
@@ -42,7 +57,7 @@ export default function UserRegister() {
             <div className="container py-3">
                 <div className="row align-items-center">
                     <div className="col-10 col-lg-5 border-dark border rounded-2 mx-auto py-3">
-                        <form className="d-flex flex-column gap-2" onSubmit={handleSubmit(handleAdminRegister)}>
+                        <form className="d-flex flex-column gap-2" onSubmit={handleSubmit(handleUserRegister)} encType="multipart/form-data" >
                             <div className="text-center">
                                 <Image height={60} width={60} alt="logo" src='/ltImge7.png' />
                                 <p className="fs-5 text-center mb-3">Log in to explore more.</p>
@@ -71,6 +86,11 @@ export default function UserRegister() {
                                     }
                                 </div>
                                 <div className="text-end"><a>Forgot Password?</a></div>
+                            </div>
+                            {/* Profile Image */}
+                            <div>
+                                <label className="ps-1">Profile Image</label>
+                                <input {...register("profileImage")} type="file" accept="image/*" />
                             </div>
                             <div>
                                 <button className="pageBtn w-100 justify-content-center">Register<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></button>

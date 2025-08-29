@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AdminLayout from "@/Components/AdminLayout";
+import { addNewProduct } from "@/Services";
+import SwalFire from "@/Helpers/SwalFire";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 // Validation Schema
 const schema = yup.object().shape({
@@ -24,6 +28,8 @@ const schema = yup.object().shape({
 });
 
 const AddProduct = () => {
+    const {user}=useSelector((state)=>state.auth)
+    const [loading, setLoading] = useState(false)
     const {
         register,
         handleSubmit,
@@ -41,9 +47,24 @@ const AddProduct = () => {
         formData.append("price", data.price);
         formData.append("category", data.category);
         formData.append("description", data.description);
+        setLoading(true)
+        try {
+            const response = await addNewProduct(formData,user?.token)
+            if (response?.success) {
+                SwalFire("Product", "success", response.message)
+                reset()
+            }
+            else {
+                SwalFire("Product", "error", response.message)
+            }
 
-        alert("product added!")
-        reset()
+        } catch (error) {
+            console.error('failed to add product!', error)
+            SwalFire("Product", "error", "Inter Server Error")
+        }
+        finally {
+            setLoading(false)
+        }
 
     };
 
@@ -104,7 +125,7 @@ const AddProduct = () => {
 
                 {/* Submit Btn */}
                 <div className="col-12">
-                    <button type="submit" className="pageBtn">
+                    <button type="submit" className="pageBtn" disabled={loading}>
                         Save Product<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i>
                     </button>
                 </div>

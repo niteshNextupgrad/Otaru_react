@@ -8,6 +8,7 @@ import { login } from "@/Redux/Slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import SwalFire from "@/Helpers/SwalFire";
 import { useRouter } from "next/navigation";
+import { adminLogin } from "@/Services";
 
 
 const LoginSchema = Yup.object().shape({
@@ -18,7 +19,7 @@ export default function AdminLogin() {
     const router = useRouter()
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.auth);
-    // console.log(user, "user detail");
+
 
 
     const [showPassword, setShowPassword] = useState(false)
@@ -26,16 +27,24 @@ export default function AdminLogin() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) })
 
     const handleAdminLogin = async (payload) => {
-        // console.log(payload, "payload from form");
-        if (payload.email === 'admin@gmail.com' && payload.password === 'Admin@123') {
-            dispatch(login({ ...payload, userType: 'admin' }))
-            SwalFire("Login", "success", "Login success!")
-            reset()
-            router.push("/admin/dashboard");
+        try {
+            const response = await adminLogin(payload)
+            // console.log(response);
+
+            if (response.success) {
+                dispatch(login(response.data))
+                SwalFire("Login", "success", response.message)
+                reset()
+                router.push("/admin/dashboard");
+            }
+            else {
+                SwalFire("Login", "error", response.message)
+            }
+        } catch (error) {
+            console.error('login failed', error)
+            SwalFire("Login", "error", "internal Server Error")
         }
-        else {
-            SwalFire("Login", "error", "Inivalid username or password!!")
-        }
+
     }
     return (
         <>

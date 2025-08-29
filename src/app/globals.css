@@ -1013,6 +1013,12 @@ form {
 
 
 
+/* //add blog */
+.ck-editor__editable {
+  background-color: #0a0a0a !important; 
+  min-height: 300px !important;     
+  padding: 1rem !important;         
+}
 
 
 
