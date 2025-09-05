@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname hook
-import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
-import { logout } from "@/Redux/Slices/authSlice";
+import { useSelector } from "react-redux";
 
 const menus = [
   {
@@ -28,7 +26,6 @@ const menus = [
   },
 ]
 export default function Navbar() {
-  const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
   const router = useRouter()
   const { cartCount } = useCart();
@@ -36,7 +33,6 @@ export default function Navbar() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userLogged, setUserLogged] = useState(false)
-  const [showLogoutBtn, setShowLogoutBtn] = useState(false)
 
   const pathname = usePathname(); // Get the current pathname
 
@@ -66,28 +62,7 @@ export default function Navbar() {
     }
   }, [user])
 
-  const logoutUser = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You will be logged out of your account.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Logout!"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await dispatch(logout())
-        Swal.fire({
-          title: "Auth",
-          icon: "success",
-          text: "Logout Success!",
-        })
-        setUserLogged(false)
-        router.push('/')
-      }
-    });
-  }
+
   return (
     <>
       <nav
@@ -100,8 +75,16 @@ export default function Navbar() {
         </Link>
 
         {/* Right side on mobile: Cart + Toggle */}
-        <div className="d-flex align-items-center ms-auto d-lg-none">
-
+        <div className="d-flex align-items-center gap-2 ms-auto d-lg-none">
+          {
+            userLogged && (
+              <div className="userIcon" >
+                <div onClick={() => router.push('/user/profile')}>
+                  <Image src='/user.png' alt="user" height={30} width={30} title={"go to profile"} />
+                </div>
+              </div>
+            )
+          }
           <Link href="/cart" className="text-white">
             Cart ({cartCount || 0})
           </Link>
@@ -171,14 +154,10 @@ export default function Navbar() {
           <div className="d-none d-lg-flex align-items-center gap-3">
             {
               userLogged && (
-                <div className="userIcon" >
-                  <div onClick={() => setShowLogoutBtn(!showLogoutBtn)}>
-                    <Image src='/user.png' alt="user" height={30} width={30} title={user?.email || "User"}/>
+                <div className="userIcon" style={{cursor:"pointer"}}>
+                  <div onClick={() => router.push('/user/profile')}>
+                    <Image src='/user.png' alt="user" height={30} width={30} title={"go to profile"} />
                   </div>
-
-                  {showLogoutBtn && <div className="">
-                    <button className="pageBtn logoutBtn" onClick={logoutUser}>Logout</button>
-                  </div>}
                 </div>
               )
             }

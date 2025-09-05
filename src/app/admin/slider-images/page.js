@@ -1,10 +1,9 @@
-import AdminLayout from "@/Components/AdminLayout"
-
+import SliderImages from "@/Components/AdminComponents/SliderImages"
 const Page = () => {
     return (
-        <AdminLayout>
-            <h2>Slider Image Page</h2>
-        </AdminLayout>
+      <>
+      <SliderImages />
+      </>
     )
 }
 

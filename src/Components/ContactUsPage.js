@@ -2,6 +2,8 @@
 import { useState } from "react";
 import ContactForm from "./ContactForm";
 import InstagramAdvertize from "./InstagramAdvertize";
+import { subscribeNewsLetter } from "@/Services";
+import SwalFire from "@/Helpers/SwalFire";
 
 const contacts = [
     {
@@ -24,6 +26,7 @@ const contacts = [
 export default function ContactUsPage() {
     const [newsLetterEmail, setNewsLetterEmail] = useState("")
     const [mailError, setMailError] = useState(null)
+
     const handleSubmitNewsletter = async (e) => {
         e.preventDefault();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,9 +34,18 @@ export default function ContactUsPage() {
             setMailError("Please enter a valid email address");
             return;
         }
-
-        alert("Submitted");
-        setNewsLetterEmail("");
+        try {
+            const response = await subscribeNewsLetter({ email: newsLetterEmail });
+            if (response?.success) {
+                setNewsLetterEmail("");
+                SwalFire("Subscribe NewsLetter", "success", response?.message)
+            }
+            else {
+                SwalFire("Subscribe NewsLetter", "error", response?.message)
+            }
+        } catch (error) {
+            console.error('failed to subscribe newsletter', error)
+        }
         setMailError("");
 
     }
@@ -96,10 +108,10 @@ export default function ContactUsPage() {
                             <h2 >
                                 Subscribe to our newsletter
                             </h2>
-                            <form className="newsLetterForm w-100">
+                            <form className="newsLetterForm w-100" onSubmit={handleSubmitNewsletter}>
                                 <div className="input-group">
-                                    <input required={true} type="email" placeholder="Your e-mail" onChange={(e) => setNewsLetterEmail(e.target.value)} />
-                                    <button className="btn mt-3 p-2  newsLetterSubmit" type="submit" onClick={handleSubmitNewsletter}><i className="ri-send-plane-2-fill"></i></button>
+                                    <input required={true} type="email" value={newsLetterEmail} placeholder="Your e-mail" onChange={(e) => setNewsLetterEmail(e.target.value)} />
+                                    <button className="btn mt-3 p-2  newsLetterSubmit" type="submit" ><i className="ri-send-plane-2-fill"></i></button>
                                     {mailError && (
                                         <p className="text-danger">{mailError}</p>
                                     )}
@@ -112,7 +124,7 @@ export default function ContactUsPage() {
             </section>
             <hr />
             <InstagramAdvertize />
-            <hr />
+         
         </>
     )
 }

@@ -1,22 +1,23 @@
 "use client"
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import BackToTopButton from "./BackToTopButton";
 import Link from "next/link";
 import { useCart } from "@/Hooks/useCart";
-// import { useCart } from "@/ContextApi/CartContext";
-import { productsData } from "@/Data/products";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "./Breadcrumb";
+import { getAllProductCategories, getAllProducts } from "@/Services";
 
 
 export default function ShopPage() {
     const router = useRouter()
     const { addToCart } = useCart()
-    const [allProducts] = useState(productsData)
+    const [allProducts, setAllProducts] = useState([])
     const [products, setProducts] = useState(allProducts)
+    const [productCategories, setProductCategories] = useState([])
+
     const [currentPage, setCurrentPage] = useState(1);
     const perPageProduct = 6;
     const totalPages = Math.ceil(products.length / perPageProduct);
@@ -26,8 +27,38 @@ export default function ShopPage() {
 
     const [priceRange, setPriceRange] = useState([0, 5000]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
     const [sortBy, setSortBy] = useState("latest")
+
+
+
+    const fetchProductCategories = async () => {
+        try {
+            const response = await getAllProductCategories()
+            if (response?.success) {
+                setProductCategories(response.data)
+            }
+
+        } catch (error) {
+            console.error('failed to fetch products!')
+        }
+    }
+
+    const fetchProducts = async () => {
+        try {
+            const response = await getAllProducts()
+            if (response?.success) {
+                setAllProducts(response.data)
+                setProducts(response.data);
+            }
+
+        } catch (error) {
+            console.error('failed to fetch products!')
+        }
+    }
+    useEffect(() => {
+        fetchProductCategories();
+        fetchProducts()
+    }, [])
 
     const filterByPrice = () => {
         let filtered = allProducts.filter(
@@ -53,16 +84,37 @@ export default function ShopPage() {
     };
 
 
+    const filterByCategory = (categoryName) => {
 
-
-    const seearchByCategory = (e) => {
-        e.preventDefault()
-        console.log(e.target.value);
-
+        let filtered = allProducts.filter(
+            p => p.category?.name == categoryName
+        );
+        setProducts(filtered);
+        setCurrentPage(1);
     }
-    const sortProducts = () => {
-        console.log(sortBy);
-    }
+    const sortProducts = (value) => {
+        let sorted = [...products];
+        switch (value) {
+            case "priceLow":
+                sorted.sort((a, b) => a.price - b.price);
+                break;
+            case "priceHigh":
+                sorted.sort((a, b) => b.price - a.price);
+                break;
+            case "latest":
+                sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                break;
+            case "popularty":
+                sorted.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+                break;
+            default:
+                break;
+        }
+
+        setProducts(sorted);
+        setCurrentPage(1);
+    };
+
     return (
         <>
             <BackToTopButton />
@@ -84,9 +136,16 @@ export default function ShopPage() {
                                                     <p className="m-0">
                                                         Showing{" "} {startIndex + 1}-{Math.min(startIndex + perPageProduct, products.length)} {" "} of {products.length} results
                                                     </p>
-                                                    <select className="form-select" value={sortBy} onChange={(e) => { setSortBy(e.target.value); sortProducts() }}>
+                                                    <select
+                                                        className="form-select"
+                                                        value={sortBy}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            setSortBy(value);
+                                                            sortProducts(value);
+                                                        }}
+                                                    >
                                                         <option value="popularty">Sort by popularty</option>
-                                                        <option value="rating">Sort by average Rating</option>
                                                         <option value="latest">Sort by latest</option>
                                                         <option value="priceLow">Sort by price : low to high</option>
                                                         <option value="priceHigh">Sort by price : high to low</option>
@@ -115,7 +174,21 @@ export default function ShopPage() {
                                                             <div>
 
                                                                 <h4 className="transitionText fw-normal" onClick={() => router.push(`/product/${product.id}`)}>{product.title}</h4>
-                                                                <p>₹{product.price}</p>
+                                                                <p>
+                                                                    {product.discount > 0 ? (
+                                                                        <>
+                                                                            <span className="text-muted text-decoration-line-through">
+                                                                                ₹{product.price}
+                                                                            </span>{" "}
+                                                                            <span className="fw-bold">
+                                                                                ₹{(product.price - (product.price * product.discount / 100)).toFixed(2)}
+                                                                            </span>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>₹{product.price}</>
+                                                                    )}
+                                                                </p>
+
                                                             </div>
                                                         </div>
 
@@ -187,21 +260,12 @@ export default function ShopPage() {
                                     </div>
                                     <div className="mt-4">
                                         <h5>Categories</h5>
-                                        {/* <ul className="d-flex flex-column gap-2 mt-4">
-                                            <li>Gadgets <span className="text-muted">(19)</span></li>
-                                            <li>Headphones <span className="text-muted">(3)</span></li>
-                                            <li>Keyboards <span className="text-muted">(6)</span></li>
-                                            <li>Speakers <span className="text-muted">(12)</span></li>
-                                            <li>Watches <span className="text-muted">(5)</span></li>
-                                        </ul> */}
-                                        <div className="d-flex flex-column gap-2 mt-4">
-                                            <Link href='/' className="text-white">Gadgets <span className="text-muted">(19)</span></Link>
-                                            <Link href='/' className="text-white">Headphones <span className="text-muted">(3)</span></Link>
-                                            <Link href='/' className="text-white">Keyboards <span className="text-muted">(6)</span></Link>
-                                            <Link href='/' className="text-white">Speakers <span className="text-muted">(12)</span></Link>
-                                            <Link href='/' className="text-white">Gadgets <span className="text-muted">(19)</span></Link>
-                                            <Link href='/' className="text-white">Watches <span className="text-muted">(5)</span></Link>
-                                        </div>
+                                        <ul className="d-flex flex-column gap-2 mt-4">
+                                            {productCategories?.map((cat, index) => (
+                                                <li className="text-white" key={cat?.id} onClick={() => filterByCategory(cat?.name)} style={{ cursor: "pointer" }}>{cat?.name} <span className="text-muted"></span></li>
+                                            ))}
+                                        </ul>
+
                                     </div>
                                     <div className="row g-2 mt-4">
                                         <div>
@@ -230,7 +294,6 @@ export default function ShopPage() {
                     </div>
                 </div>
             </section>
-            <hr />
         </>
     );
 }

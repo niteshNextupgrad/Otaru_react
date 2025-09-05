@@ -1,14 +1,14 @@
 "use client"
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackToTopButton from "./BackToTopButton";
 import Breadcrumb from "./Breadcrumb";
-import { blogData } from "@/Data/blogs";
 import { useRouter } from "next/navigation";
+import { getAllBlogs } from "@/Services";
 
 export default function BlogPage() {
-    const router=useRouter()
-    const [blogs, setBlogs] = useState(blogData)
+    const router = useRouter()
+    const [blogs, setBlogs] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const perPageBlog = 3;
 
@@ -19,6 +19,13 @@ export default function BlogPage() {
     const startIndex = (currentPage - 1) * perPageBlog;
     const selectedBlogs = blogs.slice(startIndex, startIndex + perPageBlog);
 
+    const fetchBlogData = async () => {
+        const response = await getAllBlogs()
+        setBlogs(response?.data || [])
+    }
+    useEffect(() => {
+        fetchBlogData()
+    }, [])
     return (
         <>
             <BackToTopButton />
@@ -33,8 +40,12 @@ export default function BlogPage() {
                         <div className="col-sm-10 mx-auto">
 
                             <div className="row">
-                                {selectedBlogs.map((blog, index) => (
-                                    <div key={index} className="col-12 p-0 d-flex flex-column gap-4 py-5 mb-4" onClick={() => router.push(`/blog/${blog.id}`)}>
+                                {selectedBlogs?.map((blog, index) => (
+                                    <div
+                                        key={index}
+                                        className="col-12 p-0 d-flex flex-column gap-4 py-5 mb-4"
+                                        onClick={() => router.push(`/blog/${blog.slug}`)}
+                                    >
                                         <Image
                                             src={blog.image}
                                             width={1125}
@@ -45,27 +56,52 @@ export default function BlogPage() {
                                         />
                                         <div className="d-flex flex-column gap-4">
                                             <div>
-                                                <button className="small-text btn btn-outline-light p-0 px-1">{blog.date}</button>
+                                                <button className="small-text btn btn-outline-light p-0 px-1">
+                                                    {blog.date}
+                                                </button>
                                             </div>
                                             <div>
                                                 <h2 className="fs-1 transitionText mb-4">{blog.title}</h2>
                                                 <p className="text-muted small ls-1">{blog.description}</p>
                                             </div>
                                             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                {/* Fixed Tags */}
                                                 <div className="d-flex flex-wrap gap-2">
-                                                    {blog.tags.map((type, idx) => (
-                                                        <button key={idx} className="pageBtn py-1 px-4">{type}</button>
-                                                    ))}
+                                                    {(() => {
+                                                        let cleanTags = [];
+                                                        try {
+                                                            // Try to parse into proper array if it's broken JSON
+                                                            cleanTags = JSON.parse(blog.tags.join(""));
+                                                        } catch (e) {
+                                                            cleanTags = blog.tags; // fallback
+                                                        }
+                                                        return cleanTags.map((type, idx) => (
+                                                            <button key={idx} className="pageBtn py-1 px-4">
+                                                                {type.replace(/["\[\]]/g, "").trim()}
+                                                            </button>
+                                                        ));
+                                                    })()}
                                                 </div>
+
+                                                {/* Social Links */}
                                                 <div className="d-flex flex-wrap gap-2">
-                                                    {blog.socialLinks.map((sl, idx) => (
-                                                        <a key={idx} href={sl.link} target="_blank" className="text-muted small-text">{sl.name}</a>
+                                                    {blog?.socialLinks?.map((sl, idx) => (
+                                                        <a
+                                                            key={idx}
+                                                            href={sl.link}
+                                                            target="_blank"
+                                                            className="text-muted small-text"
+                                                            rel="noreferrer"
+                                                        >
+                                                            {sl.name}
+                                                        </a>
                                                     ))}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
+
                             </div>
 
                             {/* Pagination */}
@@ -105,7 +141,7 @@ export default function BlogPage() {
                     </div>
                 </div>
             </section>
-            <hr />
+           
         </>
     );
 }

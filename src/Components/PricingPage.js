@@ -102,7 +102,7 @@ export default function PricingPage() {
             </section>
 
             <InstagramAdvertize />
-            <hr />
+            
         </>
 
     )

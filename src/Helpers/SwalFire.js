@@ -9,4 +9,28 @@ const SwalFire = (title = "", icon = "success", text = "") => {
         width: 400
     })
 }
+
+
+export const SwalConfirm = async (
+    title = "Are you sure?",
+    text = "This action cannot be undone!",
+    icon = "warning",
+    confirmButtonText = "Yes",
+    cancelButtonText = "Cancel"
+) => {
+    const result = await Swal.fire({
+        title,
+        text,
+        icon,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText,
+        cancelButtonText,
+    });
+
+    return result.isConfirmed;
+};
+
+
 export default SwalFire;

@@ -2,79 +2,37 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Loader from "./Loader";
+import Loader from "../Loader";
 import Link from "next/link";
-import Swal from "sweetalert2";
-import SwalFire from "@/Helpers/SwalFire";
+import SwalFire, { SwalConfirm } from "@/Helpers/SwalFire";
 import { logout } from "@/Redux/Slices/authSlice";
 import Image from "next/image";
 
 
-const adminMenus = [
+const userMenus = [
     {
-        name: 'Dashboard',
-        link: '/admin/dashboard',
-        icon: 'ri-dashboard-line'
+        name: 'Profile',
+        link: '/user/profile',
+        icon: 'ri-user-line'
     },
     {
-        name: 'Users',
-        link: '/admin/users',
-        icon: 'ri-group-line'
+        name: 'My Orders',
+        link: '/user/orders',
+        icon: 'ri-shopping-cart-line'
     },
     {
-        name: "Blogs",
-        icon: "ri-archive-line",
-        menus: [
-            {
-                label: 'Manage Blogs',
-                link: '/admin/blogs'
-            },
-            {
-                label: 'Add Blog',
-                link: '/admin/add-blog'
-            },
-        ]
+        name: 'Go to Cart Page',
+        link: '/cart',
+        icon: 'ri-shopping-cart-line'
     },
     {
-        name: "Products",
-        icon: "ri-archive-line",
-        menus: [
-            {
-                label: 'Product Category',
-                link: '/admin/product-category'
-            },
-            {
-                label: 'Manage Products',
-                link: '/admin/products'
-            },
-            {
-                label: 'Add Product',
-                link: '/admin/add-product'
-            },
-        ]
+        name: 'Back to Home Page',
+        link: '/',
+        icon: 'ri-home-2-line'
     },
-    {
-        name: "Slider Images",
-        link: '/admin/slider-images',
-        icon: "ri-image-line"
-    },
-    {
-        name: "NewsLetters",
-        link: '/admin/newsletters',
-        icon: "ri-mail-ai-line"
-    },
-    {
-        name: "Contacts",
-        link: '/admin/contacts',
-        icon: "ri-contacts-book-2-line"
-    },
-    {
-        name: "Orders",
-        link: '/admin/orders',
-        icon: "ri-shopping-cart-line"
-    },
+
 ]
-export default function AdminLayout({ children }) {
+export default function UserLayout({ children }) {
     const { user } = useSelector((state) => state.auth);
     const pathName = usePathname()
     const dispatch = useDispatch()
@@ -86,7 +44,7 @@ export default function AdminLayout({ children }) {
     };
 
     useEffect(() => {
-        adminMenus.forEach(menu => {
+        userMenus.forEach(menu => {
             if (menu.menus?.some(sub => sub.link === pathName)) {
                 setOpenMenu(menu.name);
             }
@@ -94,28 +52,25 @@ export default function AdminLayout({ children }) {
     }, [pathName]);
 
     useEffect(() => {
-        if (!user || user.userType !== "admin") {
-            router.push("/admin/login");
+        if (!user || user.userType !== "user") {
+            router.push("/user-login");
         }
     }, [user, router]);
 
 
-    const logoutUser = () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You will be logged out of your account.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Logout!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                await dispatch(logout())
-                SwalFire('Auth', "success", "Logout Success!",)
-                router.push('/')
-            }
-        });
+    const logoutUser = async () => {
+        const confirmed = await SwalConfirm(
+            "Are You Sure ?",
+            "You will be logged out of your account.",
+            "warning",
+            "Yes, Logout!",
+            "Cancel"
+        );
+        if (!confirmed) return;
+
+        await dispatch(logout());
+        SwalFire("Auth", "success", "Logout Success!");
+        router.push("/");
     }
     if (!user) {
         return <Loader />;
@@ -137,12 +92,11 @@ export default function AdminLayout({ children }) {
                         <i className="ri-close-line"></i>
                     </button>
                     <div className="border-bottom d-flex justify-content-between align-items-center p-2 p-lg-4">
-                        {/* <h5 className=" mt-1">Admin</h5> */}
-                        <Image src='/man.png' height={60} width={60} alt="avatar" />
+                        <Image src={user?.profileImage ? user.profileImage : "/user.png"} height={60} width={60} alt="avatar" className="rounded-circle" />
                         <button className="pageBtn mt-0 py-1 " onClick={logoutUser}>Logout<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></button>
                     </div>
                     <ul className="nav flex-column gap-2 mt-lg-3">
-                        {adminMenus.map((menu, index) => (
+                        {userMenus.map((menu, index) => (
                             <li key={index} className="nav-item">
                                 {/* If it has submenus */}
                                 {menu.menus ? (
@@ -200,7 +154,7 @@ export default function AdminLayout({ children }) {
                     >
                         <i className="ri-menu-2-line"></i>
                     </button>
-                    <span className="text-dark ms-2">Admin Pannel</span>
+                    <span className="text-dark ms-2">User Pannel</span>
                 </div>
 
                 {/*  Content */}

@@ -19,6 +19,7 @@ export default function AdminLogin() {
     const router = useRouter()
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.auth);
+    const [loading,setLoading]=useState(false)
 
 
 
@@ -27,6 +28,7 @@ export default function AdminLogin() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) })
 
     const handleAdminLogin = async (payload) => {
+        setLoading(true)
         try {
             const response = await adminLogin(payload)
             // console.log(response);
@@ -43,6 +45,9 @@ export default function AdminLogin() {
         } catch (error) {
             console.error('login failed', error)
             SwalFire("Login", "error", "internal Server Error")
+        }
+        finally{
+            setLoading(false)
         }
 
     }
@@ -76,7 +81,7 @@ export default function AdminLogin() {
                                 <div className="text-end"><a>Forget Password</a></div>
                             </div>
                             <div>
-                                <button className="pageBtn">Login now<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></button>
+                                <button className="pageBtn">{loading ? "logging..." :"Login now"}<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></button>
                             </div>
                         </form>
                     </div>

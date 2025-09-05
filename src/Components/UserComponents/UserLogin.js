@@ -91,7 +91,7 @@ export default function UserLogin() {
                     </div>
                 </div>
             </div>
-            <hr />
+
         </>
     )
 }

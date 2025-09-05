@@ -5,6 +5,7 @@ import {
     increaseQuantity,
     decreaseQuantity,
     removeFromCart,
+    clearCart
 } from "@/Redux/Slices/cartSlice";
 
 export function useCart() {
@@ -17,6 +18,7 @@ export function useCart() {
     return {
         cartItems,
         cartCount,
+        clearCart: () => dispatch(clearCart()),
         addToCart: (product) => dispatch(addToCart(product)),
         increaseQuantity: (id) => dispatch(increaseQuantity(id)),
         decreaseQuantity: (id) => dispatch(decreaseQuantity(id)),

@@ -94,7 +94,7 @@ export default function OurTeam() {
 
             <hr />
             <InstagramAdvertize />
-            <hr />
+            
         </>
     )
 }

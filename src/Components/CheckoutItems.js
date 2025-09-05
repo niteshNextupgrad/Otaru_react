@@ -1,12 +1,14 @@
 "use client";
-import { useState } from "react";
-// import { useCart } from "@/ContextApi/CartContext";
+import { useEffect, useState } from "react";
 import { useCart } from "@/Hooks/useCart";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "./Breadcrumb";
+import { useSelector } from "react-redux";
+import { placeAnOrder } from "@/Services";
+import SwalFire from "@/Helpers/SwalFire";
 
 const checkoutSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
@@ -27,13 +29,30 @@ const countryStateData = {
 };
 
 export default function CheckOutCartItems() {
-    const router = useRouter()
-    const { cartItems } = useCart();
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const { user } = useSelector((state) => state.auth);
+    const router = useRouter();
+    const { cartItems, clearCart } = useCart();
+
+    // helper for discounted price
+    const getDiscountedPrice = (price, discount) => {
+        if (!discount || discount <= 0) return price;
+        return price - (price * discount) / 100;
+    };
+
+    const subtotal = cartItems.reduce(
+        (acc, item) =>
+            acc + getDiscountedPrice(item.price, item.discount) * item.quantity,
+        0
+    );
 
     const [states, setStates] = useState([]);
 
-    // hook form
+    useEffect(() => {
+        if (!user || user?.userType !== "user") {
+            router.replace("/user-login");
+        }
+    }, [user, router]);
+
     const {
         register,
         handleSubmit,
@@ -43,159 +62,209 @@ export default function CheckOutCartItems() {
     } = useForm({
         resolver: yupResolver(checkoutSchema),
     });
-    // Watch country field in real-time
+
     const selectedCountry = watch("country");
 
     const handleCountryChange = (e) => {
         const country = e.target.value;
         setStates(countryStateData[country] || []);
     };
-    const onSubmit = (data) => {
-        const payload = {
-            ...data,
-            cartItems,
-            total: subtotal,
-        };
-        console.log("Payload:", payload);
-        alert("Order placed successfully!")
-        reset()
+
+    const onSubmit = async (data) => {
+        try {
+            const payload = {
+                userId: user?.id, // logged-in user
+                address: data.address,
+                total: subtotal,
+                items: cartItems.map((item) => ({
+                    productId: item.id,
+                    title: item.title,
+                    price: item.price,
+                    discount: item.discount || 0,
+                    quantity: item.quantity,
+                })),
+                billing: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    mobile: data.mobile,
+                    country: data.country,
+                    state: data.state,
+                },
+                notes: data.notes || "",
+            };
+
+            console.log(payload);
+
+            const result = await placeAnOrder(payload)
+
+            if (result.success) {
+                SwalFire("Place Order", "success", "Order placed successfully!")
+                reset();
+                clearCart()
+                router.push("/cart");
+            } else {
+                alert(result.message || "Failed to place order");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong, please try again!");
+        }
     };
 
     return (
         <>
-            <Breadcrumb paths={[
-                { label: "HOME", href: "/" },
-                { label: "CHECKOUT", href: null },
-            ]} />
-            {
-                cartItems?.length > 0 ? (
-                    <section className="py-5 checkOutPage">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-11 col-lg-10 mx-auto">
-                                    <div className="row">
-                                        <div className="col-12 d-flex flex-column gap-3">
-                                            <h2 className="ls-1">Your Order</h2>
-                                            <div className="table-responsive">
-                                                <table className="table table-transparent align-middle text-nowrap text-muted">
-                                                    <thead>
-                                                        <tr>
-                                                            <td className="fs-4">Product</td>
-                                                            <td className="fs-4">Subtotal</td>
+            <Breadcrumb
+                paths={[
+                    { label: "HOME", href: "/" },
+                    { label: "CHECKOUT ITEMS", href: null },
+                ]}
+            />
+            {cartItems?.length > 0 ? (
+                <section className="py-5 checkOutPage">
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-11 col-lg-10 mx-auto">
+                                <div className="row">
+                                    <div className="col-12 d-flex flex-column gap-3">
+                                        <h2 className="ls-1">Your Order</h2>
+                                        <div className="table-responsive">
+                                            <table className="table table-transparent align-middle text-nowrap text-muted">
+                                                <thead>
+                                                    <tr>
+                                                        <td className="fs-4">Product</td>
+                                                        <td className="fs-4">Subtotal</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {cartItems.map((item) => (
+                                                        <tr key={item.id}>
+                                                            <td className="d-flex gap-2 align-items-center">
+                                                                <span className="fs-6 fs-md-5 transitionText">
+                                                                    {item.title} <i className="ri-close-fill fw-bold"></i>{" "}
+                                                                    {item.quantity}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                ₹
+                                                                {(
+                                                                    getDiscountedPrice(item.price, item.discount) *
+                                                                    item.quantity
+                                                                ).toFixed(2)}
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {cartItems.map((item) => (
-                                                            <tr key={item.id}>
-                                                                <td className="d-flex gap-2 align-items-center">
-                                                                    <span className="fs-6 fs-md-5 transitionText">
-                                                                        {item.title} <i className="ri-close-fill fw-bold"></i> {item.quantity}
-                                                                    </span>
-                                                                </td>
-                                                                <td>₹{(item.price * item.quantity).toFixed(2)}</td>
-                                                            </tr>
-                                                        ))}
-                                                        <tr className="fs-4">
-                                                            <td>Total</td>
-                                                            <td>₹{subtotal.toFixed(2)}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                    ))}
+                                                    <tr className="fs-4">
+                                                        <td>Total</td>
+                                                        <td>₹{subtotal.toFixed(2)}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-6 p-lg-4">
-                                            <h2>Billing details</h2>
-                                            <form className="text-muted" onSubmit={handleSubmit(onSubmit)}>
-                                                <div>
-                                                    <label>First Name*</label>
-                                                    <input type="text" {...register("firstName")} />
-                                                    <p className="text-danger small">{errors.firstName?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>Last Name*</label>
-                                                    <input type="text" {...register("lastName")} />
-                                                    <p className="text-danger small">{errors.lastName?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>Mobile Number*</label>
-                                                    <input type="text" {...register("mobile")} />
-                                                    <p className="text-danger small">{errors.mobile?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>Email Address*</label>
-                                                    <input type="email" {...register("email")} />
-                                                    <p className="text-danger small">{errors.email?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>Country*</label>
-                                                    <select className="form-select w-100" {...register("country")} onChange={handleCountryChange}>
-                                                        <option value="">Select Country</option>
-                                                        {Object.keys(countryStateData).map((country) => (
-                                                            <option key={country} value={country}>
-                                                                {country}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <p className="text-danger small">{errors.country?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>State*</label>
-                                                    <select className="form-select w-100"  {...register("state")} disabled={!states.length}>
-                                                        <option value="">Select State</option>
-                                                        {states.map((st) => (
-                                                            <option key={st} value={st}>
-                                                                {st}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <p className="text-danger small">{errors.state?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <label>Address*</label>
-                                                    <textarea rows={4} {...register("address")} />
-                                                    <p className="text-danger small">{errors.address?.message}</p>
-                                                </div>
-                                                <div>
-                                                    <button type="submit" className="pageBtn small ls-1 mb-sm-4">
-                                                        Place Order <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div className="col-12 col-lg-6 p-lg-4">
-                                            <h2>Additional information</h2>
-                                            <div className="text-muted">
-                                                <label>Order notes (optional)</label>
-                                                <textarea
-                                                    rows={2}
-                                                    placeholder="Notes about your order, e.g. special notes for delivery."
-                                                    {...register("notes")}
-                                                />
+                                {/* Billing Details */}
+                                <div className="row">
+                                    <div className="col-12 col-lg-6 p-lg-4">
+                                        <h2>Billing details</h2>
+                                        <form className="text-muted" onSubmit={handleSubmit(onSubmit)}>
+                                            <div>
+                                                <label>First Name*</label>
+                                                <input type="text" {...register("firstName")} />
+                                                <p className="text-danger small">{errors.firstName?.message}</p>
                                             </div>
+                                            <div>
+                                                <label>Last Name*</label>
+                                                <input type="text" {...register("lastName")} />
+                                                <p className="text-danger small">{errors.lastName?.message}</p>
+                                            </div>
+                                            <div>
+                                                <label>Mobile Number*</label>
+                                                <input type="text" {...register("mobile")} />
+                                                <p className="text-danger small">{errors.mobile?.message}</p>
+                                            </div>
+                                            <div>
+                                                <label>Email Address*</label>
+                                                <input type="email" {...register("email")} />
+                                                <p className="text-danger small">{errors.email?.message}</p>
+                                            </div>
+                                            <div>
+                                                <label>Country*</label>
+                                                <select
+                                                    className="form-select w-100"
+                                                    {...register("country")}
+                                                    onChange={handleCountryChange}
+                                                >
+                                                    <option value="">Select Country</option>
+                                                    {Object.keys(countryStateData).map((country) => (
+                                                        <option key={country} value={country}>
+                                                            {country}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <p className="text-danger small">{errors.country?.message}</p>
+                                            </div>
+                                            <div>
+                                                <label>State*</label>
+                                                <select
+                                                    className="form-select w-100"
+                                                    {...register("state")}
+                                                    disabled={!states.length}
+                                                >
+                                                    <option value="">Select State</option>
+                                                    {states.map((st) => (
+                                                        <option key={st} value={st}>
+                                                            {st}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <p className="text-danger small">{errors.state?.message}</p>
+                                            </div>
+                                            <div>
+                                                <label>Address*</label>
+                                                <textarea rows={4} {...register("address")} />
+                                                <p className="text-danger small">{errors.address?.message}</p>
+                                            </div>
+                                            <div>
+                                                <button type="submit" className="pageBtn small ls-1 mb-sm-4">
+                                                    Place Order <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    {/* Notes */}
+                                    <div className="col-12 col-lg-6 p-lg-4">
+                                        <h2>Additional information</h2>
+                                        <div className="text-muted">
+                                            <label>Order notes (optional)</label>
+                                            <textarea
+                                                rows={2}
+                                                placeholder="Notes about your order, e.g. special notes for delivery."
+                                                {...register("notes")}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                ) : (
-                    <div className="row py-5">
-                        <div className="col-6 mx-auto text-center d-flex justify-content-center flex-column align-items-center">
-                            <h2>Your cart is currently empty.</h2>
-                            <button
-                                onClick={() => router.push('/shop')}
-                                className="pageBtn small ls-1"
-                            >Return to shop page <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i></button>
-                        </div>
                     </div>
-                )
-            }
-            <hr />
-
-
+                </section>
+            ) : (
+                <div className="row py-5">
+                    <div className="col-6 mx-auto text-center d-flex justify-content-center flex-column align-items-center">
+                        <h2>Your cart is currently empty.</h2>
+                        <button
+                            onClick={() => router.push("/shop")}
+                            className="pageBtn small ls-1"
+                        >
+                            Return to shop page{" "}
+                            <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

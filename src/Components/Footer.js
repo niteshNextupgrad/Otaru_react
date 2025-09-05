@@ -1,4 +1,6 @@
 "use client";
+import SwalFire from "@/Helpers/SwalFire";
+import { subscribeNewsLetter } from "@/Services";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -13,14 +15,23 @@ export default function Footer() {
       setMailError("Please enter a valid email address");
       return;
     }
-
-    alert("Submitted");
-    setNewsLetterEmail("");
+    try {
+      const response = await subscribeNewsLetter({ email: newsLetterEmail });
+      if (response?.success) {
+        setNewsLetterEmail("");
+        SwalFire("Subscribe NewsLetter", "success", response?.message)
+      }
+      else{
+            SwalFire("Subscribe NewsLetter", "error", response?.message)
+      }
+    } catch (error) {
+      console.error('failed to subscribe newsletter', error)
+    }
     setMailError("");
 
   }
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-4 border-top border-secondary">
       <footer className="bg-dark-transparent text-white mt-0 mt-lg-5 ">
 
         <div className="row g-4">
@@ -52,10 +63,10 @@ export default function Footer() {
           <div className="col-lg-3 col-6">
             <h5 className="ls-1 fw-normal">Newsletter</h5>
             <p className="text-muted">Be up to date with new products.</p>
-            <form className="newsLetterForm">
+            <form className="newsLetterForm" onSubmit={handleSubmitNewsletter}>
               <div className="input-group mt-5">
-                <input required={true} type="email" placeholder="Your e-mail" onChange={(e) => setNewsLetterEmail(e.target.value)} />
-                <button className="btn mt-3 p-2  newsLetterSubmit" type="submit" onClick={handleSubmitNewsletter}><i className="ri-send-plane-2-fill"></i></button>
+                <input type="email" placeholder="Your e-mail" value={newsLetterEmail} onChange={(e) => setNewsLetterEmail(e.target.value)} />
+                <button className="btn mt-3 p-2  newsLetterSubmit" type="submit"><i className="ri-send-plane-2-fill"></i></button>
                 {mailError && (
                   <p className="text-danger">{mailError}</p>
                 )}

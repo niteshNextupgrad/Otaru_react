@@ -6,6 +6,9 @@ import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { useEffect, useState } from "react";
+import { getProductById } from "@/Services";
+import Loader from "@/Components/Loader";
+import SwalFire from "@/Helpers/SwalFire";
 
 export default function ProductPage() {
     const router = useRouter();
@@ -21,8 +24,11 @@ export default function ProductPage() {
         const fetchProduct = async () => {
             try {
                 setLoading(true);
-                const item = productsData.find((p) => p.id.toString() === productId);
-                setProduct(item);
+                const response = await getProductById(productId)
+                if (response?.success) {
+                    setProduct(response.data)
+                }
+
             } catch (err) {
                 console.error(err.message);
             } finally {
@@ -32,6 +38,11 @@ export default function ProductPage() {
         fetchProduct();
     }, [productId]);
 
+
+    const handleAddToCart=(product)=>{
+        addToCart(product);
+        SwalFire("Product","success","product added to cart!")
+    }
 
     if (!product) {
         return (
@@ -55,6 +66,10 @@ export default function ProductPage() {
                 </div>
             </>
         );
+    }
+
+    if (loading) {
+        return <Loader />
     }
 
     return (
@@ -85,24 +100,35 @@ export default function ProductPage() {
                         <div className="col-12 col-lg-4 px-3 px-lg-5">
                             <div>
                                 <h2 className="fs-1">{product.title}</h2>
-                                <s className="fs-3 me-1 text-muted">₹{product.price + product.price*20/100}</s>
-                                <span className="fs-2 mt-2">₹{product.price}.00</span>
-                                <p className="text-muted my-4">{product.description}</p>
+                                {product.discount > 0 ? (
+                                    <>
+                                        <s className="fs-2 me-1 text-muted">
+                                            ₹ {product?.price}
+                                        </s>
+                                        <span>({product?.discount}% off)</span>
+                                        <p className="fs-1 mt-2">₹{(product.price - (product.price * product.discount / 100)).toFixed(2)}</p>
+                                    </>
+                                ) : (
+                                    <p className="fs-1">₹{product?.price}</p>
+                                )
+                                }
+
+                                <p className="text-muted my-4 text-capitalize">{product.description}</p>
 
                                 <button
                                     className="pageBtn mb-4"
-                                    onClick={() => addToCart(product)}
+                                    onClick={() => handleAddToCart(product)}
                                 >
                                     Add to cart <i className="fw-bold fs-4 ri-arrow-right-s-fill"></i>
                                 </button>
                             </div>
 
                             <div className="mt-4 fs-5">
-                                <p className="m-0">
+                                {/* <p className="m-0">
                                     SKU: <span className="fs-6 text-muted">04</span>
-                                </p>
+                                </p> */}
                                 <p className="m-0">
-                                    Category: <span className="fs-6 text-muted">{product.category || "N/A"}</span>
+                                    Category: <span className="fs-6 text-muted">{product?.category?.name || "N/A"}</span>
                                 </p>
                             </div>
                         </div>

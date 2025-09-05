@@ -253,7 +253,7 @@ const AboutUs = () => {
             <div className="my-5">
                 <InstagramAdvertize />
             </div>
-            <hr />
+        
         </>
     )
 }

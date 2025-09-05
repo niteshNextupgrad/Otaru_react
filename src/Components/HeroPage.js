@@ -2,7 +2,7 @@
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination, Navigation } from "swiper/modules";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
@@ -12,20 +12,21 @@ import Image from "next/image";
 import LightImages from "./LightImages";
 import InstagramAdvertize from "./InstagramAdvertize";
 import ContactForm from "./ContactForm";
+import { getAllSldierImages } from "@/Services";
 
-const slides = [
+const staticSlides = [
     {
-        src: "/image04.jpg",
-        title: "Fllow the digital trends and lead the changes",
+        imageUrl: "/image04.jpg",
+        title: "Follow the digital trends and lead the changes",
         subtitle: "Design. Build. Scale.",
     },
     {
-        src: "/image05.jpg",
+        imageUrl: "/image05.jpg",
         title: "Realize your new projects with our expertize",
         subtitle: "We craft digital experiences.",
     },
     {
-        src: "/image06.jpg",
+        imageUrl: "/image06.jpg",
         title: "Incredible app features & fresh new Ideas",
         subtitle: "Empowering your growth.",
     },
@@ -96,6 +97,7 @@ const advantages = [
     },
 ];
 export default function HeroPage() {
+    const [slides, setSlides] = useState([])
     const [isPlaying, setIsPlaying] = useState(false);
     const [activeImage, setActiveImage] = useState("/image13.jpg");
     const swiperRef = useRef(null);
@@ -105,6 +107,25 @@ export default function HeroPage() {
         setIsPlaying(true); // mark as playing
         vid.setAttribute("controls", "true")
     };
+
+
+    useEffect(() => {
+        const fetchSliderImages = async () => {
+            try {
+                const resonse = await getAllSldierImages()
+                const filtered = resonse.data.filter((slide, index) => slide.status == "active")
+                setSlides(filtered);
+            } catch (error) {
+                console.error('failed to fetch slides', error)
+            }
+        }
+        fetchSliderImages()
+    }, [])
+
+
+    if (slides?.length === 0) {
+        setSlides(staticSlides)
+    }
 
     return (
         <>
@@ -122,7 +143,7 @@ export default function HeroPage() {
                             <div
                                 className="h-100 w-100 position-relative d-flex align-items-end justify-content-start text-white p-5"
                                 style={{
-                                    backgroundImage: `url(${slide.src})`,
+                                    backgroundImage: `url(${slide.imageUrl})`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                 }}
@@ -469,7 +490,7 @@ export default function HeroPage() {
             <hr />
 
             <InstagramAdvertize />
-            <hr />
+            
         </>
     );
 }

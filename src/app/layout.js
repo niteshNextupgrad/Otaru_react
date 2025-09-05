@@ -18,9 +18,8 @@ import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
   const pathName = usePathname()
-  // console.log(pathName);
   let hideLayout = false
-  if (pathName.startsWith('/admin')) {
+  if (pathName.startsWith('/admin') || pathName.startsWith('/user/')) {
     hideLayout = true
   }
 

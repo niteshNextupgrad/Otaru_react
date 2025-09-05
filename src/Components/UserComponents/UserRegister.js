@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
-import { login } from "@/Redux/Slices/authSlice";
-import { useDispatch, useSelector } from "react-redux";
 import SwalFire from "@/Helpers/SwalFire";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "../Breadcrumb";
@@ -20,13 +18,15 @@ const LoginSchema = Yup.object().shape({
 })
 export default function UserRegister() {
     const router = useRouter()
-
+    const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) })
 
     const handleUserRegister = async (data) => {
         try {
+            setLoading(true)
+
             const formData = new FormData();
             formData.append("name", data.name);
             formData.append("email", data.email);
@@ -45,6 +45,9 @@ export default function UserRegister() {
         } catch (error) {
             console.error("failed to register user", error);
             SwalFire("Register", "error", "Internal Server Error");
+        }
+        finally {
+            setLoading(false)
         }
     };
     return (
@@ -85,15 +88,14 @@ export default function UserRegister() {
                                             : <i className="fs-5 ri-eye-off-line" onClick={() => setShowPassword(!showPassword)}></i>
                                     }
                                 </div>
-                                <div className="text-end"><a>Forgot Password?</a></div>
                             </div>
                             {/* Profile Image */}
                             <div>
-                                <label className="ps-1">Profile Image</label>
+                                <label className="ps-1">Profile Picture</label>
                                 <input {...register("profileImage")} type="file" accept="image/*" />
                             </div>
                             <div>
-                                <button className="pageBtn w-100 justify-content-center">Register<i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></button>
+                                <button className="pageBtn w-100 justify-content-center" disabled={loading}>{loading ? 'Registering...' : (<>Register <i className="fw-bold fs-5 ri-arrow-right-s-fill"></i></>)}</button>
                             </div>
                             {/* <p className="text-center text-muted small my-3">-------OR-------</p> */}
                             <div>

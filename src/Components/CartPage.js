@@ -1,6 +1,5 @@
 "use client"
 import Image from "next/image"
-// import { useCart } from "@/ContextApi/CartContext"
 import { useCart } from "@/Hooks/useCart";
 
 import { useRouter } from "next/navigation"
@@ -11,13 +10,22 @@ export default function CartPage() {
     const router = useRouter()
     const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useCart()
 
+
+    const getDiscountedPrice = (price, discount) => {
+        if (!discount || discount <= 0) return price; // no discount
+        return price - (price * discount / 100);
+    };
     // calculate subtotal/total
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    const subtotal = cartItems.reduce(
+        (acc, item) => acc + getDiscountedPrice(item.price, item.discount) * item.quantity,
+        0
+    );
 
 
-    const handleApplyCoupon=(e)=>{
+    const handleApplyCoupon = (e) => {
         e.preventDefault()
     }
+
 
     return (
         <>
@@ -59,10 +67,19 @@ export default function CartPage() {
                                                                 alt={item?.title || "img"}
                                                                 className="rounded"
                                                             />
-                                                            <span className="fs-6 transitionText"  style={{wordBreak:'break-word'}}>
+                                                            <span className="fs-6 transitionText" style={{ wordBreak: 'break-word' }}>
                                                                 {item.title}</span>
                                                         </td>
-                                                        <td className="align-middle pe-2">₹{item.price.toFixed(2)}</td>
+                                                        <td className="align-middle pe-2">
+                                                            {item.discount > 0 ? (
+
+                                                                <span>₹{getDiscountedPrice(item.price, item.discount).toFixed(2)}</span>
+
+                                                            ) : (
+                                                                <span>₹{item.price}</span>
+                                                            )}
+                                                        </td>
+
                                                         <td className="align-middle pe-2">
                                                             <div className="d-flex ">
                                                                 <button className="cartBtn quantityBtn">{item.quantity}</button>
@@ -82,7 +99,9 @@ export default function CartPage() {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="align-middle">₹{(item.price * item.quantity).toFixed(2)}</td>
+                                                        <td className="align-middle">
+                                                            ₹{(getDiscountedPrice(item.price, item.discount) * item.quantity).toFixed(2)}
+                                                        </td>
                                                     </tr>
 
 
@@ -96,7 +115,7 @@ export default function CartPage() {
                             {/* Coupon Section */}
                             <form className="row align-items-lg-center mx-lg-5 mx-2 my-4 my-lg-0" onSubmit={handleApplyCoupon}>
                                 <div className="col-lg-3 col-6 d-flex">
-                                    <input placeholder="Coupon Code" className=" small" required/>
+                                    <input placeholder="Coupon Code" className=" small" required />
                                 </div>
                                 <div className="col-lg-3 col-6">
                                     <button className="pageBtn small py-0 mt-0" type="submit">
@@ -145,7 +164,7 @@ export default function CartPage() {
                         )
                 }
             </section >
-            <hr />
+
         </>
     )
 }
